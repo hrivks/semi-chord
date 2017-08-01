@@ -1,0 +1,24 @@
+{
+  "name": "semi-chord",
+  "homepage": "https://github.com/hrivks/semi-chord",
+  "description": "A D3 based interactive chord-diagram-like chart with all the bells and whistles",
+  "main": "",
+  "keywords": [
+    "d3",
+    "chord-diagram",
+    "chart",
+    "visualization"
+  ],
+  "authors": [
+    "Hari Vikas Janarthanan"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
