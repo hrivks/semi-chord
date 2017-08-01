@@ -25,10 +25,14 @@ var _SC = function (pE, d, c, dA, dK) {
     this.d3RootNode = d3.select(this.parentElement);
 
     // validate data;
-    this.validateData();
+    if (! this.validateData()) {
+		return false;
+	}
 
     // validate config
-    this.validateConfig();
+    if(!this.validateConfig()){
+		return false;
+	}
 
     // utility functions
     this.utils = new this.Utils(this.config.radius, this.config.centerX, this.config.centerY);

@@ -52,9 +52,10 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
      * @param {{x:number, y:number}} p1 source point
      * @param {{x:number, y:number}} p2 start point on the circle
      * @param {{x:number, y:number}} p3 end point on the circle
+	 * @param {{x:number, y:number}} mid mid point on the circle between start and end
      * @returns {string} d attribute value of the ribbon path
      */
-    this.getRibbonBetweenPoints = function (p1, p2, p3) {
+    this.getRibbonBetweenPoints = function (p1, p2, p3, mid) {
         var d = [];
 
         // starting point: p1
@@ -64,7 +65,7 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
         d = d.concat([" Q ", bezier.x, ",", bezier.y, " ", p2.x, "," + p2.y]);
 
         // Line between p2 and p3
-        d = d.concat([" L ", p3.x, ",", p3.y]);
+        d = d.concat([" Q ", mid.x, ",", mid.y, " ", p3.x, "," + p3.y]);
 
         // curve between p1 and p3
         bezier = {x: (p1.x + p3.x) / 2, y: p1.y};

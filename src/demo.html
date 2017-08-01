@@ -6,16 +6,9 @@
         <title>semi-chord demo</title>
         <meta name="description" content="demo page for semi-chord">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        <!--jquery-->
-        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
 		<!--D3-->
-		<script 
-			src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.0/d3.min.js" 
-			integrity="sha256-r7j1FXNTvPzHR41+V71Jvej6fIq4v4Kzu5ee7J/RitM=" 
-			crossorigin="anonymous">
-		</script>
+		<script src="../bower_components/d3/d3.min.js"></script>
+		<!--semi-chord-->
         <script src="semi-cord._SC.js"></script>
 		<script src="semi-cord.validation.js"></script>
         <script src="semi-cord.utils.js"></script>
@@ -26,12 +19,10 @@
         <script src="semi-chord.export.js"></script>
         <script src="semi-chord.js"></script>
 
+    </head>
+    <body>
         <div style="width:80%; margin:0 auto;">
-            <div id="scContainer1" style="width:600px; height: 400px">
-            </div>
-            <br/>
-            <br/>
-            <div id="scContainer2" style="width:600px; height: 400px">
+            <div id="scContainer1" style="width:900px; height: 700px">
             </div>
         </div>
 		
@@ -48,41 +39,40 @@
 		<script>
             var data = [
                 {
-                    'portfolio': 'ISF',
-                    'MV': 23,
-                    'PnL YTD': 43,
-                    'TWR YTD': 34.56,
-                    'BM TWR YTD': 22.4,
-                    'Rel Return': 45.3
+                    'Product': 'Apple',
+                    'Weight Produced': '2 tonnes',
+                    'Cost per unit': '$2.99',
+                    'Weight Juiced': '0.5 tonnes',
+                    'Shipping per unit': '$0.99',
+                    'Total Profit': '$8.3 K'
                 },
                 {
-                    'portfolio': 'GEAF',
-                    'MV': 45,
-                    'PnL YTD': 13,
-                    'TWR YTD': 24.5,
-                    'BM TWR YTD': 72.4,
-                    'Rel Return': 25.3
+                    'Product': 'Orange',
+                    'Weight Produced': '4.5 tonnes',
+                    'Cost per unit': '$1.49',
+                    'Weight Juiced': '3.5 tonnes',
+                    'Shipping per unit': '$0.29',
+                    'Total Profit': '$12.5 K'
                 },
                 {
-                    'portfolio': 'BFAF',
-                    'MV': 67,
-                    'PnL YTD': 56,
-                    'TWR YTD': 3.6,
-                    'BM TWR YTD': 52.4,
-                    'Rel Return': 5.3
+                    'Product': 'Mango',
+                    'Weight Produced': '1.1 tonnes',
+                    'Cost per unit': '$4.29',
+                    'Weight Juiced': '0.2 tonnes',
+                    'Shipping per unit': '$0.99',
+                    'Total Profit': '$5.3 K'
                 },
                 {
-                    'portfolio': 'IPAP',
-                    'MV': 50,
-                    'PnL YTD': 33,
-                    'TWR YTD': 74.56,
-                    'BM TWR YTD': 12.4,
-                    'Rel Return': 24.3
+                    'Product': 'Banana',
+                    'Weight Produced': '0.3 tonnes',
+                    'Cost per unit': '$1.99',
+                    'Weight Juiced': '0.1 tonnes',
+                    'Shipping per unit': '$0.49',
+                    'Total Profit': '$3.7 K'
                 }
             ];
 
             var sc1 = semiChord('#scContainer1', data);
-            var sc2 = semiChord('#scContainer2', data);
 		</script>
     </body>
 </html>

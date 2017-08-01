@@ -41,14 +41,15 @@ _SC.prototype.validateConfig = function () {
             rangeEnd: 0.85 // end radian angle. valid range: 0 to 1
         },
         valueLabel: {
-            offsetX: 30, // space between attribute title and label
+            offsetX: 30, // space between attribute title and label text
+			backdropOffsetX: 12, // space between attribute title and backdrop beginning point
             fontSize: 11, // font size of the label text
             verticalSpace: 12, // vertical space between label texts
             fontOpacity: 0.8, // default opacity of the label texts
             fontHighlightOpacity: 1, // opacity of the highlighted label text
             fontHighlightInverseColor: '#AAA', /* font color of other label texts when one
 												  or more label is highlighted */
-            fontHighlightSizeIncrement: 1.5, // font size to increase on highlight
+            fontHighlightSizeIncrement: 1.2, // font size to increase on highlight
             backdropOpacity: 0.2, // opacity of the backdrop shape
             backdropHighlightOpacity: 0.3, // backdrop opacity when attribute is highlighted
             disable: false,
@@ -57,6 +58,12 @@ _SC.prototype.validateConfig = function () {
     };
 
     var rootElement = this.d3RootNode.node();
+	
+	if(!rootElement) {
+		console.log('semi-chord: no valid element found for given parent element selector');
+		return false;
+	}
+	
     // check and assign missing defaults
     if (config) {
         var elementWidth, elementHeight;
@@ -145,6 +152,7 @@ _SC.prototype.validateConfig = function () {
             var dfl = defaults.valueLabel;
 
             c.offsetX = c.offsetX || dfl.offsetX;
+			c.backdropOffsetX = c.backdropOffsetX || dfl.backdropOffsetX;
             c.fontSize = c.fontSize || dfl.fontSize;
             c.verticalSpace = c.verticalSpace || dfl.verticalSpace;
             c.fontOpacity = c.fontOpacity || dfl.fontOpacity;
@@ -176,6 +184,8 @@ _SC.prototype.validateConfig = function () {
         config.centerY = defaultHeight / 2;
         config.key.radius = 0.05 * config.radius;
     }
+	
+	return true;
 };
 
 /**

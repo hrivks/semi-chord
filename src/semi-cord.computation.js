@@ -70,6 +70,7 @@ _SC.prototype.computeCoordinates = function () {
                         source: keyPointCoordinates[rowIndex],
                         start: _self.utils.getCoordinateOnCirlce(startAngle),
                         end: _self.utils.getCoordinateOnCirlce(endAngle),
+						mid: _self.utils.getCoordinateOnCirlce((startAngle + endAngle) / 2),
                         color: colorScale(attr),
                         text: e[_self.dataKey] + " : " + e[attr],
                         scData: {

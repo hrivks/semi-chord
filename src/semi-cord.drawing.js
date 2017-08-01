@@ -34,7 +34,7 @@ _SC.prototype.draw = function () {
         .append('path')
         .classed('ribbon', true)
         .attr('d', function (d) {
-            return _self.utils.getRibbonBetweenPoints(d.source, d.start, d.end);
+            return _self.utils.getRibbonBetweenPoints(d.source, d.start, d.end, d.mid);
         })
         .attr('fill', function (d) {
             return d.color;
@@ -204,8 +204,8 @@ _SC.prototype.draw = function () {
         .attr('d', function (d, i) {
             var arcAngle = cc.arcAngles[i];
             var arc = d3.arc()
-                .innerRadius(config.radius - 3)
-                .outerRadius(config.radius + config.arc.width - 3)
+                .innerRadius(config.radius - config.arc.width * 0.25 )
+                .outerRadius(config.radius + config.arc.width * 0.75 )
                 .startAngle(arcAngle.start)
                 .endAngle(arcAngle.end);
             return arc();
@@ -266,7 +266,7 @@ _SC.prototype.draw = function () {
         .enter();
 
     // create arc title texts
-    arcTexts
+    var arcTitleElements = arcTexts
         .append('text')
         .classed('attribute-title', true)
         .attr('x', function (d) {
@@ -325,7 +325,7 @@ _SC.prototype.draw = function () {
             });
 
             // get attribute title text bounding box. required as title can be of variable length
-            var attributeTitleBBox = d3.selectAll('text.attribute-title').nodes()[i].getBBox();
+            var attributeTitleBBox = arcTitleElements.nodes()[i].getBBox();
             var x = attributeTitleBBox.x + attributeTitleBBox.width + config.valueLabel.offsetX;
             var y = attributeTitleBBox.y + attributeTitleBBox.height / 2;
 
@@ -355,7 +355,7 @@ _SC.prototype.draw = function () {
             return d.attribute;
         })
         .selectAll('tspan.value-label-element')
-        .data(function (d) {
+        .data(function (d, i) {
             var totalHalfHeight = d.values.length * d.height / 2;
 
             //scale to center items vertically around the attribute title text
@@ -364,8 +364,8 @@ _SC.prototype.draw = function () {
                 .domain([0, d.values.length - 1]);
 
             // horizontal space between attribute title text and backdrop shape
-            var centerOffset = config.valueLabel.offsetX - 3;
-
+            var centerOffset = config.valueLabel.offsetX - config.valueLabel.backdropOffsetX;
+			
             valueLabelTextsPositions.push({
                 center: {
                     x: d.x - centerOffset,
@@ -526,8 +526,8 @@ _SC.prototype.draw = function () {
 
     // update dimensions of the root element
     d3RootNode
-        .attr('width', baseRectDimensions.width)
-        .attr('height', baseRectDimensions.height)
+        .attr('width', '100%')
+        .attr('height', '100%')
         .attr('font-family', _self.config.fontFamily);
 
     // reference to all ribbon SVG elements
