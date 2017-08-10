@@ -7,10 +7,11 @@ _SC.prototype.getExport = function () {
          */
         config: function (c) {
             if (c) {
-                _self.config = _self.validateConfig(c);
+                _self.config = c;
+				_self.validateConfig();
                 _self.update();
             }
-            return this.config;
+            return _self.config;
         },
 
         /**
@@ -34,7 +35,9 @@ _SC.prototype.getExport = function () {
         /**
          * Redraw semi-chord
          */
-        redraw: _self.redraw,
+        redraw: function(){
+			_self.redraw();
+		},
 
         /**
          * Delete the semi-chord
@@ -182,7 +185,12 @@ _SC.prototype.getExport = function () {
                     // highlight label text
                     _self.highlighting.highlightLabelByAttribute(attribute, keepExisting);
                 }
-            }
+            },
+			
+			resetHighlights: function(){
+				_self.clickManager.reset();
+				_self.highlighting.resetHighlights();
+			}
         }
     };
 };

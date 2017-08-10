@@ -139,7 +139,7 @@ _SC.prototype.validateConfig = function () {
             c.rangeStart = c.rangeStart || dfl.rangeStart;
             c.rangeEnd = c.rangeEnd || dfl.rangeEnd;
             c.fontColor = c.fontColor || dfl.fontColor;
-            c.fontSize = c.fontColor || dfl.fontColor;
+            c.fontSize = c.fontSize || dfl.fontSize;
         }
         else {
             config.key = defaults.key;
@@ -193,7 +193,7 @@ _SC.prototype.validateConfig = function () {
  * @returns {boolean} true if data is valid, false otherwise
  */
 _SC.prototype.validateData = function () {
-    if (!(this.data instanceof Array)) {
+    if (!this.data || !this.data[0]) {
         console.log('semi-chord: Invalid data. Expected: array of JSON objects');
         return false;
     }
@@ -207,8 +207,8 @@ _SC.prototype.validateData = function () {
     if (!this.dataAttributes) {
         this.dataAttributes = [];
         for (var prop in this.data[0]) {
-            if (this.data[0].hasOwnProperty(prop)) {
-                this.dataAttributes.push(prop);
+            if (this.data[0].hasOwnProperty(prop) && this.dataKey !== prop) {
+				this.dataAttributes.push(prop);
             }
         }
     }

@@ -256,7 +256,8 @@ _SC.prototype.getInteractions = function () {
         _self.highlighting.highlightRibbon(e);
 
         // highlight label text
-        _self.highlighting.highlightLabel(d.scData.key, d.scData.attribute);
+		if(!_self.config.valueLabel.disable)
+			_self.highlighting.highlightLabel(d.scData.key, d.scData.attribute);
     }
 
     /**

@@ -190,8 +190,7 @@ _SC.prototype.getHighlighting = function () {
      * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
      */
     function highlightLabel(key, attribute, keepExisting) {
-
-        if (typeof key === 'string' && typeof attribute === 'string') {
+		if (typeof key === 'string' && typeof attribute === 'string') {
 
             var attrFilter = '[sc-data-attribute="' + attribute + '"]';
             var keyFilter = '[sc-data-key="' + key + '"]';

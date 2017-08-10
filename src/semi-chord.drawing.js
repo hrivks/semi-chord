@@ -283,6 +283,7 @@ _SC.prototype.draw = function () {
         })
         .style('cursor', 'pointer')
         .attr('alignment-baseline', 'central')
+		.attr('font-size', config.key.fontSize)
         .on('mouseenter', function (d) {
             interactions.onAttributeMouseEnter(this, d);
             // fire callbacks
@@ -304,7 +305,9 @@ _SC.prototype.draw = function () {
                 'attribute', events.attribute.click,
                 'attribute.text', events.attribute.text.click);
         });
-
+	 
+	if(!config.valueLabel.disable){
+	 
     /**---- Value Labels ------**/
 
         // new values labels to create on attribute arcs    
@@ -314,13 +317,13 @@ _SC.prototype.draw = function () {
             .append('g')
             .classed('value-labels', true)
             .attr('fill-opacity', function () {
-                return config.valueLabel.autoHide ? 0 : 1;
+                return config.valueLabel.autoHide || config.valueLabel.disable ? 0 : 1;
             });
 
     var valueLabels = valueLabelGroup.selectAll('text.attribute-value-label')
         .data(_self.dataAttributes.map(function (d, i) {
             // list of all values for current attribute
-            var valuesText = data.map(function (e) {
+            var valuesText = _self.data.map(function (e) {
                 return e[_self.dataKey] + " : " + (e[d] || 0);
             });
 
@@ -390,9 +393,9 @@ _SC.prototype.draw = function () {
                     text: e,
                     color: color,
                     scData: {
-                        key: data[j][_self.dataKey],
+                        key: _self.data[j][_self.dataKey],
                         attribute: d.attribute,
-                        value: data[j][d.attribute]
+                        value: _self.data[j][d.attribute]
                     }
                 };
             });
@@ -426,10 +429,10 @@ _SC.prototype.draw = function () {
             return d.color;
         })
         .attr('fill-opacity', function () {
-            return config.valueLabel.autoHide ? 0 : config.valueLabel.fontOpacity;
+            return config.valueLabel.autoHide || config.valueLabel.disable ? 0 : config.valueLabel.fontOpacity;
         })
         .on('mouseenter', function (d) {
-            if (config.valueLabel.autoHide)
+            if (config.valueLabel.autoHide || config.valueLabel.disable)
                 return;
             // select corresponding ribbon and pass to ribbonMouseEnter event handler
             var ribbon = _self.scRibbons
@@ -446,7 +449,7 @@ _SC.prototype.draw = function () {
             eventManager.dispatcher([this], d, 'label.text', events.label.text.mouseLeave);
         })
         .on('click', function (d) {
-            if (config.valueLabel.autoHide)
+            if (config.valueLabel.autoHide || config.valueLabel.disable)
                 return;
             var ribbon = _self.scRibbons
                 .filter('path.ribbon[sc-data-key="' + d.scData.key + '"]'
@@ -465,7 +468,7 @@ _SC.prototype.draw = function () {
             //sc data
             d.scData = {
                 attribute: _self.dataAttributes[i],
-                value: data.map(function (e) {
+                value: _self.data.map(function (e) {
                     return {
                         key: e[_self.dataKey],
                         value: e[_self.dataAttributes[i]]
@@ -485,13 +488,13 @@ _SC.prototype.draw = function () {
             return utils.getValueLabelBackdrop(d.center, d.top, d.bottom, d.width);
         })
         .attr('fill-opacity', function () {
-            return config.valueLabel.autoHide ? 0 : config.valueLabel.backdropOpacity;
+            return config.valueLabel.autoHide || config.valueLabel.disable ? 0 : config.valueLabel.backdropOpacity;
         })
         .attr('fill', function (d) {
             return d.color;
         })
         .on('mouseenter', function (d) {
-            if (config.valueLabel.autoHide)
+            if (config.valueLabel.autoHide || config.valueLabel.disable)
                 return;
             interactions.onAttributeMouseEnter(this, d);
             // fire callbacks
@@ -503,12 +506,13 @@ _SC.prototype.draw = function () {
             eventManager.dispatcher([this], d, 'label', events.label.mouseLeave);
         })
         .on('click', function (d) {
-            if (config.valueLabel.autoHide)
+            if (config.valueLabel.autoHide || config.valueLabel.disable)
                 return;
             interactions.onAttributeClick(this, d);
             // fire callbacks
             eventManager.dispatcher([this], d, 'label', events.label.click);
         });
+	}
 
     var baseRectDimensions = d3RootNode.node().getBBox();
     d3RootNode.insert('rect', ':first-child')

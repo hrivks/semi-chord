@@ -119,7 +119,7 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
     this.getNumericValue = function (s) {
         if (isFinite(s))
             return s;
-        var num = /\d+\.?\d*/.exec(s); // match first integer or decimal number
-        return num && num[0] ? parseFloat(num[0]) : 0;
+        var num = s.replace(/[^0-9.]/g, "");
+        return num ? parseFloat(num) : 0;
     };
 };
