@@ -8,11 +8,12 @@ _SC.prototype.getHighlighting = function () {
      * Highlight specified ribbon
      * @param {SVGPathElement} e ribbon path element
      * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+     * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+     *                       by user interactions
      */
-    function highlightRibbon(e, keepExisting) {
+    function highlightRibbon(e, keepExisting, lock) {
         if (e) {
             if (!keepExisting) {
-
                 var hlightRemoved = _self.scRibbons.filter('.highlighted');
 
                 _self.scRibbons.classed('highlighted', false)
@@ -23,6 +24,7 @@ _SC.prototype.getHighlighting = function () {
             var d = d3.select(e)
                 .attr('fill-opacity', _self.config.ribbon.hoverOpacity)
                 .classed('highlighted', true)
+                .classed('highlight-locked', lock)
                 .datum();
             e.parentNode.appendChild(e);
 
@@ -37,8 +39,10 @@ _SC.prototype.getHighlighting = function () {
      * @param {string} [key] data key of the value
      * @param {string} [attribute] data attribute of the value
      * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+     * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+     *                       by user interactions
      */
-    function highlightRibbonByValue(value, key, attribute, keepExisting) {
+    function highlightRibbonByValue(value, key, attribute, keepExisting, lock) {
         if (!key && !attribute && !value)
             return;
 
@@ -71,6 +75,7 @@ _SC.prototype.getHighlighting = function () {
             r = r.filter(valueFilter);
         r.attr('fill-opacity', _self.config.ribbon.hoverOpacity)
             .classed('highlighted', true)
+            .classed('highlight-locked', lock)
             .each(function (d) {
                 this.parentNode.appendChild(this);
             });
@@ -83,8 +88,10 @@ _SC.prototype.getHighlighting = function () {
      * Highlight ribbons by key
      * @param {string} key key name
      * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+     * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+     *                       by user interactions
      */
-    function highlightRibbonByKey(key, keepExisting) {
+    function highlightRibbonByKey(key, keepExisting, lock) {
         if (key && typeof key === 'string') {
 
             var keyFilter = '[sc-data-key="' + key + '"]';
@@ -93,6 +100,7 @@ _SC.prototype.getHighlighting = function () {
                 .filter(keyFilter)
                 .attr('fill-opacity', _self.config.ribbon.hoverOpacity)
                 .classed('highlighted', true)
+                .classed('highlight-locked', lock)
                 .each(function () {
                     this.parentNode.appendChild(this);
                 });
@@ -116,10 +124,11 @@ _SC.prototype.getHighlighting = function () {
     /**
      * Highlight ribbons by attribute
      * @param {string} attribute attribute name
-     * @param {boolean} [keepExisting = false] true to preserve
-     *                                                       existing highlighted ribbons
+     * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+     * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+     *                       by user interactions
      */
-    function highlightRibbonByAttribute(attribute, keepExisting) {
+    function highlightRibbonByAttribute(attribute, keepExisting, lock) {
         if (attribute && typeof attribute === 'string') {
             var attrFilter = '[sc-data-attribute="' + attribute + '"]';
 
@@ -127,6 +136,7 @@ _SC.prototype.getHighlighting = function () {
                 .filter(attrFilter)
                 .attr('fill-opacity', _self.config.ribbon.hoverOpacity)
                 .classed('highlighted', true)
+                .classed('highlight-locked', lock)
                 .each(function () {
                     this.parentNode.appendChild(this);
                 });
@@ -190,7 +200,7 @@ _SC.prototype.getHighlighting = function () {
      * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
      */
     function highlightLabel(key, attribute, keepExisting) {
-		if (typeof key === 'string' && typeof attribute === 'string') {
+        if (typeof key === 'string' && typeof attribute === 'string') {
 
             var attrFilter = '[sc-data-attribute="' + attribute + '"]';
             var keyFilter = '[sc-data-key="' + key + '"]';
@@ -292,15 +302,20 @@ _SC.prototype.getHighlighting = function () {
 
     /**
      * Reset all highlighting
+     * @param {boolean} removeLocks true to reset highlights for locked elements as well
      */
-    var resetHighlights = function () {
+    var resetHighlights = function (removeLocks) {
         if (_self.clickManager.isClicked())
             return;
 
         var r = _self.scRibbons.filter(".highlighted"); // ribbon highlights to be removed
 
-        _self.scRibbons
-            .classed('highlighted', false)
+        if (removeLocks) {
+            r = _self.scRibbons.filter(":not(.highlight-locked)");
+        }
+
+        r.classed('highlighted', false)
+            .classed('highlight-locked', false)
             .attr("fill-opacity", _self.config.ribbon.opacity);
 
         fireRibbonHighlightEvent('', '', r, events.ribbon.highlightRemoved);

@@ -122,16 +122,18 @@ _SC.prototype.getExport = function () {
              * Highlight specified ribbon
              * @param {SVGPathElement} e SVG element corresponding to the ribbon
              * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+             * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+             *                       by user interactions
              * @param {boolean} [excludeLabel = false] true to prevent highlighting of associated
              *                                         label text
              */
-            highlightRibbonByElement: function (e, keepExisting, excludeLabel) {
-                _self.highlighting.highlightRibbon(e, keepExisting);
+            highlightRibbonByElement: function (e, keepExisting, lock, excludeLabel) {
+                _self.highlighting.highlightRibbon(e, keepExisting, lock);
 
                 if (!excludeLabel) {
                     var d = d3.select(e).data()[0];
                     // highlight label text
-                    _self.highlighting.highlightLabel(d.scData.key, d.scData.attribute);
+                    _self.highlighting.highlightLabel(d.scData.key, d.scData.attribute, lock);
                 }
             },
 
@@ -141,16 +143,19 @@ _SC.prototype.getExport = function () {
              * @param {string} key key name
              * @param {string} attribute attribute name
              * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+             * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+             *                       by user interactions
              * @param {boolean} [excludeLabel = false] true to prevent highlighting of associated
              *                                         label text
              */
-            highlightRibbonByValue: function (value, key, attribute, keepExisting, excludeLabel) {
+            highlightRibbonByValue: function (value, key, attribute, keepExisting,
+                                              lock, excludeLabel) {
                 var r = _self.highlighting.highlightRibbonByValue(value, key, attribute,
-                    keepExisting);
+                    keepExisting, lock);
 
                 if (!excludeLabel) {
                     r.each(function (d) {
-                        _self.highlighting.highlightLabel(d.scData.key, d.scData.attribute);
+                        _self.highlighting.highlightLabel(d.scData.key, d.scData.attribute, lock);
                     });
                 }
             },
@@ -159,15 +164,17 @@ _SC.prototype.getExport = function () {
              * Highlight ribbon by key
              * @param {string} key key name
              * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+             * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+             *                       by user interactions
              * @param {boolean} [excludeLabel = false] true to prevent highlighting of associated
              *                                         label text
              */
-            highlightRibbonByKey: function (key, keepExisting, excludeLabel) {
-                _self.highlighting.highlightRibbonByKey(key, keepExisting);
+            highlightRibbonByKey: function (key, keepExisting, lock, excludeLabel) {
+                _self.highlighting.highlightRibbonByKey(key, keepExisting, lock);
 
                 if (!excludeLabel) {
                     // highlight label text
-                    _self.highlighting.highlightLabelByKey(key, keepExisting);
+                    _self.highlighting.highlightLabelByKey(key, keepExisting, lock);
                 }
             },
 
@@ -175,15 +182,17 @@ _SC.prototype.getExport = function () {
              * Highlight ribbon by key
              * @param {string} attribute attribute name
              * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+             * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+             *                       by user interactions
              * @param {boolean} [excludeLabel = false] true to prevent highlighting of associated
              *                                         label text
              */
-            highlightRibbonByAttribute: function (attribute, keepExisting, excludeLabel) {
-                _self.highlighting.highlightRibbonByAttribute(attribute, keepExisting);
+            highlightRibbonByAttribute: function (attribute, keepExisting, lock, excludeLabel) {
+                _self.highlighting.highlightRibbonByAttribute(attribute, keepExisting, lock);
 
                 if (!excludeLabel) {
                     // highlight label text
-                    _self.highlighting.highlightLabelByAttribute(attribute, keepExisting);
+                    _self.highlighting.highlightLabelByAttribute(attribute, keepExisting, lock);
                 }
             },
 			
