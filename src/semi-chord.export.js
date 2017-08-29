@@ -170,7 +170,7 @@ _SC.prototype.getExport = function () {
              *                                         label text
              */
             highlightRibbonByKey: function (key, keepExisting, lock, excludeLabel) {
-                _self.highlighting.highlightRibbonByKey(key, keepExisting, lock);
+                var r = _self.highlighting.highlightRibbonByKey(key, keepExisting, lock);
 
                 if (!excludeLabel) {
                     // highlight label text

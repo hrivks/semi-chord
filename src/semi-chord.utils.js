@@ -57,7 +57,7 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
      */
     this.getRibbonBetweenPoints = function (p1, p2, p3, mid) {
         var d = [];
-        
+
         // starting point: p1
         d = d.concat(["M ", p1.x, ",", p1.y]);
         // curve between p1 and p2

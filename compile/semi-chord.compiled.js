@@ -356,7 +356,7 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
      */
     this.getRibbonBetweenPoints = function (p1, p2, p3, mid) {
         var d = [];
-        
+
         // starting point: p1
         d = d.concat(["M ", p1.x, ",", p1.y]);
         // curve between p1 and p2
@@ -1494,12 +1494,17 @@ _SC.prototype.getHighlighting = function () {
             var d = d3.select(e)
                 .attr('fill-opacity', _self.config.ribbon.hoverOpacity)
                 .classed('highlighted', true)
-                .classed('highlight-locked', lock)
+                .classed('highlight-locked', function () {
+                    return lock || d3.select(this).classed('highlight-locked');
+                })
                 .datum();
+
             e.parentNode.appendChild(e);
 
             //fire highlight event
             _self.eventManager.dispatcher([e], d, 'ribbon', events.ribbon.highlight);
+
+            return d;
         }
     }
 
@@ -1545,7 +1550,9 @@ _SC.prototype.getHighlighting = function () {
             r = r.filter(valueFilter);
         r.attr('fill-opacity', _self.config.ribbon.hoverOpacity)
             .classed('highlighted', true)
-            .classed('highlight-locked', lock)
+            .classed('highlight-locked', function () {
+                return lock || d3.select(this).classed('highlight-locked');
+            })
             .each(function (d) {
                 this.parentNode.appendChild(this);
             });
@@ -1570,7 +1577,9 @@ _SC.prototype.getHighlighting = function () {
                 .filter(keyFilter)
                 .attr('fill-opacity', _self.config.ribbon.hoverOpacity)
                 .classed('highlighted', true)
-                .classed('highlight-locked', lock)
+                .classed('highlight-locked', function () {
+                    return lock || d3.select(this).classed('highlight-locked');
+                })
                 .each(function () {
                     this.parentNode.appendChild(this);
                 });
@@ -1588,6 +1597,8 @@ _SC.prototype.getHighlighting = function () {
 
                 fireRibbonHighlightEvent(key, '', r, events.ribbon.highlightRemoved);
             }
+
+            return r;
         }
     }
 
@@ -1606,7 +1617,9 @@ _SC.prototype.getHighlighting = function () {
                 .filter(attrFilter)
                 .attr('fill-opacity', _self.config.ribbon.hoverOpacity)
                 .classed('highlighted', true)
-                .classed('highlight-locked', lock)
+                .classed('highlight-locked', function () {
+                    return lock || d3.select(this).classed('highlight-locked');
+                })
                 .each(function () {
                     this.parentNode.appendChild(this);
                 });
@@ -1624,6 +1637,8 @@ _SC.prototype.getHighlighting = function () {
 
                 fireRibbonHighlightEvent(attribute, '', r, events.ribbon.highlightRemoved);
             }
+
+            return r;
         }
     }
 
@@ -1668,8 +1683,11 @@ _SC.prototype.getHighlighting = function () {
      * @param {string} key key value of the label
      * @param {string} attribute attribute value label
      * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+     * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+     *                       by user interactions
+
      */
-    function highlightLabel(key, attribute, keepExisting) {
+    function highlightLabel(key, attribute, keepExisting, lock) {
         if (typeof key === 'string' && typeof attribute === 'string') {
 
             var attrFilter = '[sc-data-attribute="' + attribute + '"]';
@@ -1678,6 +1696,12 @@ _SC.prototype.getHighlighting = function () {
             _self.scLabels
                 .filter(attrFilter + keyFilter)
                 .classed('highlighted', true)
+                .classed('highlight-locked', function () {
+                    return lock || d3.select(this).classed('highlight-locked');
+                })
+                .attr('fill', function (d) {
+                    return d.color;
+                })
                 .attr('fill-opacity', _self.config.valueLabel.fontHighlightOpacity)
                 .attr('font-size', _self.config.valueLabel.fontSize
                     + _self.config.valueLabel.fontHighlightSizeIncrement)
@@ -1704,8 +1728,10 @@ _SC.prototype.getHighlighting = function () {
      * Highlight all label of specified key
      * @param {string} key key value of the label
      * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+     * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+     *                       by user interactions
      */
-    function highlightLabelByKey(key, keepExisting) {
+    function highlightLabelByKey(key, keepExisting, lock) {
         if (typeof key === 'string') {
 
             var keyFilter = '[sc-data-key="' + key + '"]';
@@ -1713,6 +1739,12 @@ _SC.prototype.getHighlighting = function () {
             _self.scLabels
                 .filter(keyFilter)
                 .classed('highlighted', true)
+                .classed('highlight-locked', function () {
+                    return lock || d3.select(this).classed('highlight-locked');
+                })
+                .attr('fill', function (d) {
+                    return d.color;
+                })
                 .attr('fill-opacity', _self.config.valueLabel.fontHighlightOpacity)
                 .attr('font-size', _self.config.valueLabel.fontSize
                     + _self.config.valueLabel.fontHighlightSizeIncrement)
@@ -1738,10 +1770,11 @@ _SC.prototype.getHighlighting = function () {
     /**
      * Highlight all label of specified attribute
      * @param {string} attribute attribute value of the label
-     * @param {boolean} [keepExisting = false] true to preserve
-     *                                                       existing highlighted ribbons
+     * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+     * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+     *                       by user interactions
      */
-    function highlightLabelByAttribute(attribute, keepExisting) {
+    function highlightLabelByAttribute(attribute, keepExisting, lock) {
         if (typeof attribute === 'string') {
 
             var attrFilter = '[sc-data-attribute="' + attribute + '"]';
@@ -1749,7 +1782,15 @@ _SC.prototype.getHighlighting = function () {
             _self.scLabels
                 .filter(attrFilter)
                 .classed('highlighted', true)
+                .classed('highlight-locked', function () {
+                    return lock || d3.select(this).classed('highlight-locked');
+                })
+                .attr('fill', function (d) {
+                    return d.color;
+                })
                 .attr('fill-opacity', _self.config.valueLabel.fontHighlightOpacity)
+                .attr('font-size', _self.config.valueLabel.fontSize
+                    + _self.config.valueLabel.fontHighlightSizeIncrement)
                 .attr('font-weight', 'bold');
 
             if (!keepExisting) {
@@ -1772,41 +1813,83 @@ _SC.prototype.getHighlighting = function () {
 
     /**
      * Reset all highlighting
-     * @param {boolean} removeLocks true to reset highlights for locked elements as well
+     * @param {boolean} includeLocks true to reset highlights for locked elements as well
      */
-    var resetHighlights = function (removeLocks) {
+    var resetHighlights = function (includeLocks) {
         if (_self.clickManager.isClicked())
             return;
 
-        var r = _self.scRibbons.filter(".highlighted"); // ribbon highlights to be removed
+        var r = _self.scRibbons;
 
-        if (removeLocks) {
-            r = _self.scRibbons.filter(":not(.highlight-locked)");
+        if (!includeLocks) {
+            var locked = _self.scRibbons.filter(".highlight-locked");
+            if (locked.size() > 0) {
+                r = _self.scRibbons.filter(":not(.highlight-locked)");
+                r.classed('highlighted', false)
+                    .attr("fill-opacity", _self.config.ribbon.hoverInverseOpacity);
+                locked.attr("fill-opacity", _self.config.ribbon.hoverOpacity);
+            }
+            else {
+                r.classed('highlighted', false)
+                    .attr("fill-opacity", _self.config.ribbon.opacity);
+            }
         }
-
-        r.classed('highlighted', false)
-            .classed('highlight-locked', false)
-            .attr("fill-opacity", _self.config.ribbon.opacity);
+        else {
+            r.classed('highlighted', false)
+                .classed('highlight-locked', false)
+                .attr("fill-opacity", _self.config.ribbon.opacity);
+        }
 
         fireRibbonHighlightEvent('', '', r, events.ribbon.highlightRemoved);
 
-        _self.scLabels
-            .classed('highlighted', false)
-            .attr('fill-opacity', function () {
-                return _self.config.valueLabel.autoHide ?
-                    0 : _self.config.valueLabel.fontOpacity;
-            })
-            .attr('font-size', _self.config.valueLabel.fontSize)
-            .attr('fill', function (d) {
-                return d.color;
-            })
-            .attr('font-weight', 'normal');
-        _self.scBackdrops
-            .classed('highlighted', false)
-            .attr('fill-opacity', function () {
-                return _self.config.valueLabel.autoHide ?
-                    0 : _self.config.valueLabel.backdropOpacity;
-            });
+        var l = _self.scLabels;
+        var lLocked = l.filter(".highlight-locked");
+        var b = _self.scBackdrops;
+
+        if (!includeLocks && lLocked.size() > 0) {
+            lLocked
+                .attr('font-size', _self.config.valueLabel.fontSize
+                    + _self.config.valueLabel.fontHighlightSizeIncrement)
+                .attr('font-weight', 'bold')
+                .attr('font-size', _self.config.valueLabel.fontSize)
+                .attr('fill', function (d) {
+                    return d.color;
+                })
+                .attr('fill-opacity', function () {
+                    return _self.config.valueLabel.autoHide ?
+                        0 : _self.config.valueLabel.fontOpacity;
+                });
+
+            l.filter(":not(.highlight-locked)")
+                .classed('highlighted', false)
+                .attr('font-size', _self.config.valueLabel.fontSize)
+                .attr('fill', _self.config.valueLabel.fontHighlightInverseColor)
+                .attr('font-weight', 'normal')
+                .attr('fill-opacity', function () {
+                    return _self.config.valueLabel.autoHide ?
+                        0 : _self.config.valueLabel.fontOpacity;
+                });
+                //TODO: highlight-locked for backdrop
+        }
+        else {
+            _self.scLabels
+                .classed('highlighted', false)
+                .attr('fill-opacity', function () {
+                    return _self.config.valueLabel.autoHide ?
+                        0 : _self.config.valueLabel.fontOpacity;
+                })
+                .attr('font-size', _self.config.valueLabel.fontSize)
+                .attr('fill', function (d) {
+                    return d.color;
+                })
+                .attr('font-weight', 'normal');
+            _self.scBackdrops
+                .classed('highlighted', false)
+                .attr('fill-opacity', function () {
+                    return _self.config.valueLabel.autoHide ?
+                        0 : _self.config.valueLabel.backdropOpacity;
+                });
+        }
 
     };
 
@@ -1992,7 +2075,7 @@ _SC.prototype.getHighlighting = function () {
              *                                         label text
              */
             highlightRibbonByKey: function (key, keepExisting, lock, excludeLabel) {
-                _self.highlighting.highlightRibbonByKey(key, keepExisting, lock);
+                var r = _self.highlighting.highlightRibbonByKey(key, keepExisting, lock);
 
                 if (!excludeLabel) {
                     // highlight label text
