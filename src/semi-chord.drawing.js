@@ -375,11 +375,12 @@ _SC.prototype.draw = function () {
                     y: d.y
                 },
                 top: {
-                    x: d.x - 5 + Math.abs(dyScale(0)) / 2,
+                    x: d.x + config.valueLabel.backdropOffsetXRight + Math.abs(dyScale(0)) / 2,
                     y: d.y + dyScale(0) - 15
                 },
                 bottom: {
-                    x: d.x - 5 + Math.abs(dyScale(d.values.length - 1)) / 2,
+                    x: d.x + config.valueLabel.backdropOffsetXRight
+                    + Math.abs(dyScale(d.values.length - 1)) / 2,
                     y: d.y + dyScale(d.values.length - 1) + 15
                 }
             });

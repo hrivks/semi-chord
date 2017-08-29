@@ -108,13 +108,14 @@ _SC.prototype.validateConfig = function () {
         valueLabel: {
             offsetX: 30, // space between attribute title and label text
 			backdropOffsetX: 12, // space between attribute title and backdrop beginning point
+            backdropOffsetXRight: 1, // right padding for the backdrop
             fontSize: 11, // font size of the label text
             verticalSpace: 12, // vertical space between label texts
             fontOpacity: 0.8, // default opacity of the label texts
             fontHighlightOpacity: 1, // opacity of the highlighted label text
             fontHighlightInverseColor: '#AAA', /* font color of other label texts when one
 												  or more label is highlighted */
-            fontHighlightSizeIncrement: 1.2, // font size to increase on highlight
+            fontHighlightSizeIncrement: 0, // font size to increase on highlight
             backdropOpacity: 0.2, // opacity of the backdrop shape
             backdropHighlightOpacity: 0.3, // backdrop opacity when attribute is highlighted
             disable: false,
@@ -143,7 +144,7 @@ _SC.prototype.validateConfig = function () {
 
         elementWidth = elementWidth || defaults.width;
         elementHeight = elementHeight || defaults.height;
-        var defaultRadius = Math.min(elementWidth, elementHeight) / 3;
+        var defaultRadius = Math.round(Math.min(elementWidth, elementHeight) / 3);
 
         config.radius = config.radius || defaultRadius;
         config.centerX = config.centerX || elementWidth / 2.5;
@@ -218,6 +219,7 @@ _SC.prototype.validateConfig = function () {
 
             c.offsetX = c.offsetX || dfl.offsetX;
 			c.backdropOffsetX = c.backdropOffsetX || dfl.backdropOffsetX;
+			c.backdropOffsetXRight = c.backdropOffsetXRight || dfl.backdropOffsetXRight;
             c.fontSize = c.fontSize || dfl.fontSize;
             c.verticalSpace = c.verticalSpace || dfl.verticalSpace;
             c.fontOpacity = c.fontOpacity || dfl.fontOpacity;
@@ -242,7 +244,7 @@ _SC.prototype.validateConfig = function () {
         config = this.config;
         var defaultWidth = rootElement.clientWidth || defaults.width;
         var defaultHeight = rootElement.clientHeight || defaults.height;
-        var defaultRadius = Math.min(defaultWidth, defaultHeight) / 3;
+        var defaultRadius = Math.round(Math.min(defaultWidth, defaultHeight) / 3);
 
         config.radius = defaultRadius;
         config.centerX = defaultWidth / 2.5;
@@ -314,8 +316,8 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
      */
     this.getCoordinateOnCirlce = function (radianAngle, circleRadius) {
         circleRadius = circleRadius || radius;
-        var x = centerX + circleRadius * Math.sin(radianAngle);
-        var y = centerY - circleRadius * Math.cos(radianAngle);
+        var x = Math.round(centerX + circleRadius * Math.sin(radianAngle));
+        var y = Math.round(centerY - circleRadius * Math.cos(radianAngle));
 
         return {x: x, y: y};
     };
@@ -329,7 +331,7 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
      */
     this.getXCoordinateOnCircle = function (radianAngle, circleRadius) {
         circleRadius = circleRadius || radius;
-        return centerX + circleRadius * Math.sin(radianAngle);
+        return Math.round(centerX + circleRadius * Math.sin(radianAngle));
     };
 
     /**
@@ -341,7 +343,7 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
      */
     this.getYCoordinateOnCircle = function (radianAngle, circleRadius) {
         circleRadius = circleRadius || radius;
-        return centerY - circleRadius * Math.cos(radianAngle);
+        return Math.round(centerY - circleRadius * Math.cos(radianAngle));
     };
 
     /**
@@ -354,18 +356,18 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
      */
     this.getRibbonBetweenPoints = function (p1, p2, p3, mid) {
         var d = [];
-
+        
         // starting point: p1
         d = d.concat(["M ", p1.x, ",", p1.y]);
         // curve between p1 and p2
-        var bezier = {x: (p1.x + p2.x) / 2, y: p1.y};
+        var bezier = {x: (p1.x + p2.x) / 2, y: p1.y - 10};
         d = d.concat([" Q ", bezier.x, ",", bezier.y, " ", p2.x, "," + p2.y]);
 
         // Line between p2 and p3
         d = d.concat([" Q ", mid.x, ",", mid.y, " ", p3.x, "," + p3.y]);
 
         // curve between p1 and p3
-        bezier = {x: (p1.x + p3.x) / 2, y: p1.y};
+        bezier = {x: (p1.x + p3.x) / 2, y: p1.y + 5};
         d = d.concat([" Q ", bezier.x, ",", bezier.y, " ", p1.x, ",", p1.y]);
 
         return d.join('');
@@ -398,7 +400,7 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
         d = d.concat([' Q ', (bottomLeft.x + centerLeft.x) / 2, ',', centerLeft.y, //bezier
             ' ', bottomLeft.x, ',', bottomLeft.y]); // target pt
         // curved path from bottom left to bottom right
-        d = d.concat([' Q ', (bottomRight.x + bottomLeft.x) / 2, ',', bottomLeft.y,//bezier
+        d = d.concat([' Q ', (bottomRight.x + bottomLeft.x) / 2, ',', bottomLeft.y, //bezier
             ' ', bottomRight.x, ',', bottomRight.y]); // target pt
         // curved path from bottom right to top right
         d = d.concat([' Q ', (bottomRight.x + (bottomRight.y - topRight.y) / 2),
@@ -891,11 +893,12 @@ _SC.prototype.draw = function () {
                     y: d.y
                 },
                 top: {
-                    x: d.x - 5 + Math.abs(dyScale(0)) / 2,
+                    x: d.x + config.valueLabel.backdropOffsetXRight + Math.abs(dyScale(0)) / 2,
                     y: d.y + dyScale(0) - 15
                 },
                 bottom: {
-                    x: d.x - 5 + Math.abs(dyScale(d.values.length - 1)) / 2,
+                    x: d.x + config.valueLabel.backdropOffsetXRight
+                    + Math.abs(dyScale(d.values.length - 1)) / 2,
                     y: d.y + dyScale(d.values.length - 1) + 15
                 }
             });
@@ -1066,7 +1069,7 @@ _SC.prototype.draw = function () {
  * Event data describing the event, its value and the associated element
  * @typedef {Object} scEventData
  * @property {[SVGElement]} elements elements associated with the event
- * @property {scElementData} data value associated with the element
+ * @property {scElementData} scData value associated with the element
  * @property {string} event name of the event
  * @property {string} source friend name of the source element
  */
@@ -1110,15 +1113,18 @@ _SC.prototype.getEventManager = function () {
      * @param {scEventData} eventData data associated with the event
      */
     function invokeCallback(eventData) {
-        if (eventData && eventData.event && callbacks[eventData.event]) {
-            try {
-                setTimeout(function () {
-                    callbacks[eventData.event](eventData);
-                }, 0);
-            }
-            catch (e) {
-                console.log('Exception in callback for event :' + eventData.event);
-                console.log(e);
+        var thisEvent = eventData && eventData.event;
+        if (thisEvent) {
+            if (callbacks[thisEvent]) {
+                try {
+                    setTimeout(function () {
+                        callbacks[thisEvent](eventData);
+                    }, 0);
+                }
+                catch (e) {
+                    console.log('Exception in callback for event :' + eventData.event);
+                    console.log(e);
+                }
             }
         }
     }
@@ -1129,6 +1135,10 @@ _SC.prototype.getEventManager = function () {
      */
     function getEventNames() {
         return {
+            //global
+            onClick: 'onClick',
+            onMouseEnter: 'onMouseEnter',
+            onMouseLeave: 'onMouseLeave',
             // ribbon
             ribbon: {
                 mouseEnter: 'onRibbonMouseEnter',
@@ -1193,8 +1203,8 @@ _SC.prototype.getEventManager = function () {
 
     /**
      * Format event data and invoke specified callbacks
-     * @param {[SVGElement]} e SVG elements associated with the event
-     * @param {scElementData} d D3 data associated with the element
+     * @param {SVGElement[]} e SVG elements associated with the event
+     * @param {scEventData} d D3 data associated with the element
      * @param {string} source friendly name of the source element
      * @param {string} event generic event name
      * @param {string} [specificSource] specific name of the element within the source
@@ -1214,12 +1224,31 @@ _SC.prototype.getEventManager = function () {
         if (specificSource && specificEvent) {
             eventData = {
                 elements: e,
-                data: d.scData, //TODO;
+                data: d.scData,
                 event: specificEvent,
                 source: specificSource
             };
             invokeCallback(eventData);
         }
+
+        // fire global event
+        var globalEvent;
+        if (event.indexOf('MouseEnter') > -1)
+            globalEvent = 'onMouseEnter';
+        else if (event.indexOf('MouseLeave') > -1)
+            globalEvent = 'onMouseLeave';
+        else if (event.indexOf('Click') > -1)
+            globalEvent = 'onClick';
+
+        if(globalEvent) {
+            eventData = {
+                elements: e,
+                data: d.scData,
+                event: globalEvent,
+                source: specificSource || source
+            };
+        }
+        invokeCallback(eventData);
     }
 
     /**
@@ -1258,7 +1287,7 @@ _SC.prototype.getEventManager = function () {
 _SC.prototype.getClickManager = function () {
     var _self = this;
     var lastClicked = null;
-    
+
     /**
      * check if valid click and invoke specified function
      * @param e {SVGElement} element that is clicked
@@ -1306,11 +1335,12 @@ _SC.prototype.getClickManager = function () {
 /**------ INTERACTIONS ------**/
 _SC.prototype.getInteractions = function () {
     var _self = this;
+
     /*------ Ribbon Events ---------*/
     /**
      * Interactions when mouse enters a ribbon
      * @param {SVGPathElement} e SVG element corresponding to the ribbon
-     * @param {smElementD3Data} d d3 data associated with the ribbon
+     * @param {*} d d3 data associated with the ribbon
      */
     function onRibbonMouseEnter(e, d) {
         if (_self.clickManager.isClicked())
@@ -1320,14 +1350,15 @@ _SC.prototype.getInteractions = function () {
         _self.highlighting.highlightRibbon(e);
 
         // highlight label text
-		if(!_self.config.valueLabel.disable)
-			_self.highlighting.highlightLabel(d.scData.key, d.scData.attribute);
+        if (!_self.config.valueLabel.disable)
+            _self.highlighting.highlightLabel(d.scData.key, d.scData.attribute);
     }
 
     /**
      * Interactions when mouse leaves a ribbon
      * @param {SVGPathElement} e SVG element corresponding to the ribbon
-     * @param {smElementD3Data} d d3 data associated with the ribbon
+     * @param {Object} d d3 data associated with the ribbon
+     * @property {scElementData} d.scData d3 data associated with the ribbon
      */
     function onRibbonMouseLeave(e, d) {
         _self.highlighting.resetHighlights();
@@ -1336,7 +1367,8 @@ _SC.prototype.getInteractions = function () {
     /**
      * Interactions when mouse is clicked on a ribbon
      * @param {SVGPathElement} e SVG element corresponding to the ribbon
-     * @param {smElementD3Data} d d3 data associated with the ribbon
+     * @param {Object} d d3 data associated with the ribbon
+     * @property {scElementData} d.scData d3 data associated with the ribbon
      */
     function onRibbonClick(e, d) {
         _self.clickManager.click(e, function () {
@@ -1350,7 +1382,7 @@ _SC.prototype.getInteractions = function () {
      * Interactions when mouse enters a key
      * @param {SVGPathElement} e SVG element corresponding to the key
      * @param {Object} d D3 data associated with the element
-     * @param {scElementData} d.smData sm data associated with the element
+     * @property {scElementData} d.smData sm data associated with the element
      */
     function onKeyMouseEnter(e, d) {
         if (_self.clickManager.isClicked())
@@ -1374,7 +1406,7 @@ _SC.prototype.getInteractions = function () {
      * Interactions when mouse is clicked on a key
      * @param {SVGPathElement} e SVG element corresponding to the key
      * @param {Object} d d3 data associated with the key
-     * @param {scElementData} d.smData sm data associated with the element
+     * @property {scElementData} d.smData sm data associated with the element
      */
     function onKeyClick(e, d) {
         _self.clickManager.click(e, function () {
@@ -1388,7 +1420,7 @@ _SC.prototype.getInteractions = function () {
      * Interactions when mouse enters an attribute
      * @param {SVGPathElement} e SVG element corresponding to the attribute
      * @param {Object} d d3 data associated with the key
-     * @param {scElementData} d.smData sm data associated with the element
+     * @property {scElementData} d.smData sm data associated with the element
      */
     function onAttributeMouseEnter(e, d) {
         if (_self.clickManager.isClicked())
@@ -1406,7 +1438,8 @@ _SC.prototype.getInteractions = function () {
     /**
      * Interactions when mouse leaves an attribute
      * @param {SVGPathElement} e SVG element corresponding to the attribute
-     * @param {scElementData} d.smData sm data associated with the element
+     * @param {Object} d d3 data associated with the element
+     * @property {scElementData} d.smData sm data associated with the element
      */
     function onAttributeMouseLeave(e, d) {
         _self.highlighting.resetHighlights();
@@ -1425,15 +1458,15 @@ _SC.prototype.getInteractions = function () {
     }
 
     return {
-        onRibbonMouseEnter : onRibbonMouseEnter,
-        onRibbonMouseLeave : onRibbonMouseLeave,
-        onRibbonClick : onRibbonClick,
-        onKeyMouseEnter : onKeyMouseEnter,
+        onRibbonMouseEnter: onRibbonMouseEnter,
+        onRibbonMouseLeave: onRibbonMouseLeave,
+        onRibbonClick: onRibbonClick,
+        onKeyMouseEnter: onKeyMouseEnter,
         onKeyMouseLeave: onKeyMouseLeave,
         onKeyClick: onKeyClick,
-        onAttributeMouseEnter : onAttributeMouseEnter,
-        onAttributeMouseLeave : onAttributeMouseLeave,
-        onAttributeClick : onAttributeClick
+        onAttributeMouseEnter: onAttributeMouseEnter,
+        onAttributeMouseLeave: onAttributeMouseLeave,
+        onAttributeClick: onAttributeClick
     }
 };;/** -------- HIGHLIGHTING ------------*/
 _SC.prototype.getHighlighting = function () {
@@ -1445,11 +1478,12 @@ _SC.prototype.getHighlighting = function () {
      * Highlight specified ribbon
      * @param {SVGPathElement} e ribbon path element
      * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+     * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+     *                       by user interactions
      */
-    function highlightRibbon(e, keepExisting) {
+    function highlightRibbon(e, keepExisting, lock) {
         if (e) {
             if (!keepExisting) {
-
                 var hlightRemoved = _self.scRibbons.filter('.highlighted');
 
                 _self.scRibbons.classed('highlighted', false)
@@ -1460,6 +1494,7 @@ _SC.prototype.getHighlighting = function () {
             var d = d3.select(e)
                 .attr('fill-opacity', _self.config.ribbon.hoverOpacity)
                 .classed('highlighted', true)
+                .classed('highlight-locked', lock)
                 .datum();
             e.parentNode.appendChild(e);
 
@@ -1474,8 +1509,10 @@ _SC.prototype.getHighlighting = function () {
      * @param {string} [key] data key of the value
      * @param {string} [attribute] data attribute of the value
      * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+     * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+     *                       by user interactions
      */
-    function highlightRibbonByValue(value, key, attribute, keepExisting) {
+    function highlightRibbonByValue(value, key, attribute, keepExisting, lock) {
         if (!key && !attribute && !value)
             return;
 
@@ -1508,6 +1545,7 @@ _SC.prototype.getHighlighting = function () {
             r = r.filter(valueFilter);
         r.attr('fill-opacity', _self.config.ribbon.hoverOpacity)
             .classed('highlighted', true)
+            .classed('highlight-locked', lock)
             .each(function (d) {
                 this.parentNode.appendChild(this);
             });
@@ -1520,8 +1558,10 @@ _SC.prototype.getHighlighting = function () {
      * Highlight ribbons by key
      * @param {string} key key name
      * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+     * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+     *                       by user interactions
      */
-    function highlightRibbonByKey(key, keepExisting) {
+    function highlightRibbonByKey(key, keepExisting, lock) {
         if (key && typeof key === 'string') {
 
             var keyFilter = '[sc-data-key="' + key + '"]';
@@ -1530,6 +1570,7 @@ _SC.prototype.getHighlighting = function () {
                 .filter(keyFilter)
                 .attr('fill-opacity', _self.config.ribbon.hoverOpacity)
                 .classed('highlighted', true)
+                .classed('highlight-locked', lock)
                 .each(function () {
                     this.parentNode.appendChild(this);
                 });
@@ -1553,10 +1594,11 @@ _SC.prototype.getHighlighting = function () {
     /**
      * Highlight ribbons by attribute
      * @param {string} attribute attribute name
-     * @param {boolean} [keepExisting = false] true to preserve
-     *                                                       existing highlighted ribbons
+     * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+     * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+     *                       by user interactions
      */
-    function highlightRibbonByAttribute(attribute, keepExisting) {
+    function highlightRibbonByAttribute(attribute, keepExisting, lock) {
         if (attribute && typeof attribute === 'string') {
             var attrFilter = '[sc-data-attribute="' + attribute + '"]';
 
@@ -1564,6 +1606,7 @@ _SC.prototype.getHighlighting = function () {
                 .filter(attrFilter)
                 .attr('fill-opacity', _self.config.ribbon.hoverOpacity)
                 .classed('highlighted', true)
+                .classed('highlight-locked', lock)
                 .each(function () {
                     this.parentNode.appendChild(this);
                 });
@@ -1627,7 +1670,7 @@ _SC.prototype.getHighlighting = function () {
      * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
      */
     function highlightLabel(key, attribute, keepExisting) {
-		if (typeof key === 'string' && typeof attribute === 'string') {
+        if (typeof key === 'string' && typeof attribute === 'string') {
 
             var attrFilter = '[sc-data-attribute="' + attribute + '"]';
             var keyFilter = '[sc-data-key="' + key + '"]';
@@ -1729,15 +1772,20 @@ _SC.prototype.getHighlighting = function () {
 
     /**
      * Reset all highlighting
+     * @param {boolean} removeLocks true to reset highlights for locked elements as well
      */
-    var resetHighlights = function () {
+    var resetHighlights = function (removeLocks) {
         if (_self.clickManager.isClicked())
             return;
 
         var r = _self.scRibbons.filter(".highlighted"); // ribbon highlights to be removed
 
-        _self.scRibbons
-            .classed('highlighted', false)
+        if (removeLocks) {
+            r = _self.scRibbons.filter(":not(.highlight-locked)");
+        }
+
+        r.classed('highlighted', false)
+            .classed('highlight-locked', false)
             .attr("fill-opacity", _self.config.ribbon.opacity);
 
         fireRibbonHighlightEvent('', '', r, events.ribbon.highlightRemoved);
@@ -1896,16 +1944,18 @@ _SC.prototype.getHighlighting = function () {
              * Highlight specified ribbon
              * @param {SVGPathElement} e SVG element corresponding to the ribbon
              * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+             * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+             *                       by user interactions
              * @param {boolean} [excludeLabel = false] true to prevent highlighting of associated
              *                                         label text
              */
-            highlightRibbonByElement: function (e, keepExisting, excludeLabel) {
-                _self.highlighting.highlightRibbon(e, keepExisting);
+            highlightRibbonByElement: function (e, keepExisting, lock, excludeLabel) {
+                _self.highlighting.highlightRibbon(e, keepExisting, lock);
 
                 if (!excludeLabel) {
                     var d = d3.select(e).data()[0];
                     // highlight label text
-                    _self.highlighting.highlightLabel(d.scData.key, d.scData.attribute);
+                    _self.highlighting.highlightLabel(d.scData.key, d.scData.attribute, lock);
                 }
             },
 
@@ -1915,16 +1965,19 @@ _SC.prototype.getHighlighting = function () {
              * @param {string} key key name
              * @param {string} attribute attribute name
              * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+             * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+             *                       by user interactions
              * @param {boolean} [excludeLabel = false] true to prevent highlighting of associated
              *                                         label text
              */
-            highlightRibbonByValue: function (value, key, attribute, keepExisting, excludeLabel) {
+            highlightRibbonByValue: function (value, key, attribute, keepExisting,
+                                              lock, excludeLabel) {
                 var r = _self.highlighting.highlightRibbonByValue(value, key, attribute,
-                    keepExisting);
+                    keepExisting, lock);
 
                 if (!excludeLabel) {
                     r.each(function (d) {
-                        _self.highlighting.highlightLabel(d.scData.key, d.scData.attribute);
+                        _self.highlighting.highlightLabel(d.scData.key, d.scData.attribute, lock);
                     });
                 }
             },
@@ -1933,15 +1986,17 @@ _SC.prototype.getHighlighting = function () {
              * Highlight ribbon by key
              * @param {string} key key name
              * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+             * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+             *                       by user interactions
              * @param {boolean} [excludeLabel = false] true to prevent highlighting of associated
              *                                         label text
              */
-            highlightRibbonByKey: function (key, keepExisting, excludeLabel) {
-                _self.highlighting.highlightRibbonByKey(key, keepExisting);
+            highlightRibbonByKey: function (key, keepExisting, lock, excludeLabel) {
+                _self.highlighting.highlightRibbonByKey(key, keepExisting, lock);
 
                 if (!excludeLabel) {
                     // highlight label text
-                    _self.highlighting.highlightLabelByKey(key, keepExisting);
+                    _self.highlighting.highlightLabelByKey(key, keepExisting, lock);
                 }
             },
 
@@ -1949,15 +2004,17 @@ _SC.prototype.getHighlighting = function () {
              * Highlight ribbon by key
              * @param {string} attribute attribute name
              * @param {boolean} [keepExisting = false] true to preserve existing highlighted ribbons
+             * @param {boolean} lock true to lock highlighting. This prevents highlights from being reset
+             *                       by user interactions
              * @param {boolean} [excludeLabel = false] true to prevent highlighting of associated
              *                                         label text
              */
-            highlightRibbonByAttribute: function (attribute, keepExisting, excludeLabel) {
-                _self.highlighting.highlightRibbonByAttribute(attribute, keepExisting);
+            highlightRibbonByAttribute: function (attribute, keepExisting, lock, excludeLabel) {
+                _self.highlighting.highlightRibbonByAttribute(attribute, keepExisting, lock);
 
                 if (!excludeLabel) {
                     // highlight label text
-                    _self.highlighting.highlightLabelByAttribute(attribute, keepExisting);
+                    _self.highlighting.highlightLabelByAttribute(attribute, keepExisting, lock);
                 }
             },
 			

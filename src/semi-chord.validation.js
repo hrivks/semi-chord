@@ -43,13 +43,14 @@ _SC.prototype.validateConfig = function () {
         valueLabel: {
             offsetX: 30, // space between attribute title and label text
 			backdropOffsetX: 12, // space between attribute title and backdrop beginning point
+            backdropOffsetXRight: 1, // right padding for the backdrop
             fontSize: 11, // font size of the label text
             verticalSpace: 12, // vertical space between label texts
             fontOpacity: 0.8, // default opacity of the label texts
             fontHighlightOpacity: 1, // opacity of the highlighted label text
             fontHighlightInverseColor: '#AAA', /* font color of other label texts when one
 												  or more label is highlighted */
-            fontHighlightSizeIncrement: 1.2, // font size to increase on highlight
+            fontHighlightSizeIncrement: 0, // font size to increase on highlight
             backdropOpacity: 0.2, // opacity of the backdrop shape
             backdropHighlightOpacity: 0.3, // backdrop opacity when attribute is highlighted
             disable: false,
@@ -78,7 +79,7 @@ _SC.prototype.validateConfig = function () {
 
         elementWidth = elementWidth || defaults.width;
         elementHeight = elementHeight || defaults.height;
-        var defaultRadius = Math.min(elementWidth, elementHeight) / 3;
+        var defaultRadius = Math.round(Math.min(elementWidth, elementHeight) / 3);
 
         config.radius = config.radius || defaultRadius;
         config.centerX = config.centerX || elementWidth / 2.5;
@@ -153,6 +154,7 @@ _SC.prototype.validateConfig = function () {
 
             c.offsetX = c.offsetX || dfl.offsetX;
 			c.backdropOffsetX = c.backdropOffsetX || dfl.backdropOffsetX;
+			c.backdropOffsetXRight = c.backdropOffsetXRight || dfl.backdropOffsetXRight;
             c.fontSize = c.fontSize || dfl.fontSize;
             c.verticalSpace = c.verticalSpace || dfl.verticalSpace;
             c.fontOpacity = c.fontOpacity || dfl.fontOpacity;
@@ -177,7 +179,7 @@ _SC.prototype.validateConfig = function () {
         config = this.config;
         var defaultWidth = rootElement.clientWidth || defaults.width;
         var defaultHeight = rootElement.clientHeight || defaults.height;
-        var defaultRadius = Math.min(defaultWidth, defaultHeight) / 3;
+        var defaultRadius = Math.round(Math.min(defaultWidth, defaultHeight) / 3);
 
         config.radius = defaultRadius;
         config.centerX = defaultWidth / 2.5;

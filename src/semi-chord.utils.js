@@ -17,8 +17,8 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
      */
     this.getCoordinateOnCirlce = function (radianAngle, circleRadius) {
         circleRadius = circleRadius || radius;
-        var x = centerX + circleRadius * Math.sin(radianAngle);
-        var y = centerY - circleRadius * Math.cos(radianAngle);
+        var x = Math.round(centerX + circleRadius * Math.sin(radianAngle));
+        var y = Math.round(centerY - circleRadius * Math.cos(radianAngle));
 
         return {x: x, y: y};
     };
@@ -32,7 +32,7 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
      */
     this.getXCoordinateOnCircle = function (radianAngle, circleRadius) {
         circleRadius = circleRadius || radius;
-        return centerX + circleRadius * Math.sin(radianAngle);
+        return Math.round(centerX + circleRadius * Math.sin(radianAngle));
     };
 
     /**
@@ -44,7 +44,7 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
      */
     this.getYCoordinateOnCircle = function (radianAngle, circleRadius) {
         circleRadius = circleRadius || radius;
-        return centerY - circleRadius * Math.cos(radianAngle);
+        return Math.round(centerY - circleRadius * Math.cos(radianAngle));
     };
 
     /**
@@ -57,18 +57,18 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
      */
     this.getRibbonBetweenPoints = function (p1, p2, p3, mid) {
         var d = [];
-
+        
         // starting point: p1
         d = d.concat(["M ", p1.x, ",", p1.y]);
         // curve between p1 and p2
-        var bezier = {x: (p1.x + p2.x) / 2, y: p1.y};
+        var bezier = {x: (p1.x + p2.x) / 2, y: p1.y - 10};
         d = d.concat([" Q ", bezier.x, ",", bezier.y, " ", p2.x, "," + p2.y]);
 
         // Line between p2 and p3
         d = d.concat([" Q ", mid.x, ",", mid.y, " ", p3.x, "," + p3.y]);
 
         // curve between p1 and p3
-        bezier = {x: (p1.x + p3.x) / 2, y: p1.y};
+        bezier = {x: (p1.x + p3.x) / 2, y: p1.y + 5};
         d = d.concat([" Q ", bezier.x, ",", bezier.y, " ", p1.x, ",", p1.y]);
 
         return d.join('');
@@ -101,7 +101,7 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
         d = d.concat([' Q ', (bottomLeft.x + centerLeft.x) / 2, ',', centerLeft.y, //bezier
             ' ', bottomLeft.x, ',', bottomLeft.y]); // target pt
         // curved path from bottom left to bottom right
-        d = d.concat([' Q ', (bottomRight.x + bottomLeft.x) / 2, ',', bottomLeft.y,//bezier
+        d = d.concat([' Q ', (bottomRight.x + bottomLeft.x) / 2, ',', bottomLeft.y, //bezier
             ' ', bottomRight.x, ',', bottomRight.y]); // target pt
         // curved path from bottom right to top right
         d = d.concat([' Q ', (bottomRight.x + (bottomRight.y - topRight.y) / 2),
