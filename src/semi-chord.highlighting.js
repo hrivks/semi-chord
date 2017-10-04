@@ -1,5 +1,5 @@
 /** -------- HIGHLIGHTING ------------*/
-_SC.prototype.getHighlighting = function () {
+_SC.prototype.getHighlighting = function() {
     var _self = this;
     var events = _self.eventManager.getEventNames();
 
@@ -24,7 +24,7 @@ _SC.prototype.getHighlighting = function () {
             var d = d3.select(e)
                 .attr('fill-opacity', _self.config.ribbon.hoverOpacity)
                 .classed('highlighted', true)
-                .classed('highlight-locked', function () {
+                .classed('highlight-locked', function() {
                     return lock || d3.select(this).classed('highlight-locked');
                 })
                 .datum();
@@ -80,10 +80,10 @@ _SC.prototype.getHighlighting = function () {
             r = r.filter(valueFilter);
         r.attr('fill-opacity', _self.config.ribbon.hoverOpacity)
             .classed('highlighted', true)
-            .classed('highlight-locked', function () {
+            .classed('highlight-locked', function() {
                 return lock || d3.select(this).classed('highlight-locked');
             })
-            .each(function (d) {
+            .each(function(d) {
                 this.parentNode.appendChild(this);
             });
         //fire highlight event
@@ -107,10 +107,10 @@ _SC.prototype.getHighlighting = function () {
                 .filter(keyFilter)
                 .attr('fill-opacity', _self.config.ribbon.hoverOpacity)
                 .classed('highlighted', true)
-                .classed('highlight-locked', function () {
+                .classed('highlight-locked', function() {
                     return lock || d3.select(this).classed('highlight-locked');
                 })
-                .each(function () {
+                .each(function() {
                     this.parentNode.appendChild(this);
                 });
 
@@ -140,6 +140,7 @@ _SC.prototype.getHighlighting = function () {
      *                       by user interactions
      */
     function highlightRibbonByAttribute(attribute, keepExisting, lock) {
+
         if (attribute && typeof attribute === 'string') {
             var attrFilter = '[sc-data-attribute="' + attribute + '"]';
 
@@ -147,10 +148,10 @@ _SC.prototype.getHighlighting = function () {
                 .filter(attrFilter)
                 .attr('fill-opacity', _self.config.ribbon.hoverOpacity)
                 .classed('highlighted', true)
-                .classed('highlight-locked', function () {
+                .classed('highlight-locked', function() {
                     return lock || d3.select(this).classed('highlight-locked');
                 })
-                .each(function () {
+                .each(function() {
                     this.parentNode.appendChild(this);
                 });
 
@@ -180,6 +181,11 @@ _SC.prototype.getHighlighting = function () {
      * @param {string} event event name
      */
     function fireRibbonHighlightEvent(key, attribute, ribbons, event) {
+        // rest paint order for keys to prevent ribbons showing over keys
+        _self.d3RootNode.select("g.key-group").each(function() {
+            this.parentNode.appendChild(this);
+        });
+
         if (_self.eventManager.getRegisteredCallback(event)) {
             var eventData = {
                 elements: [],
@@ -194,7 +200,7 @@ _SC.prototype.getHighlighting = function () {
             if (attribute)
                 eventData.data.attribute = attribute;
 
-            ribbons.each(function (d) {
+            ribbons.each(function(d) {
                 eventData.elements.push(this);
                 eventData.data.value.push(d.scData);
             });
@@ -226,15 +232,15 @@ _SC.prototype.getHighlighting = function () {
             _self.scLabels
                 .filter(attrFilter + keyFilter)
                 .classed('highlighted', true)
-                .classed('highlight-locked', function () {
+                .classed('highlight-locked', function() {
                     return lock || d3.select(this).classed('highlight-locked');
                 })
-                .attr('fill', function (d) {
+                .attr('fill', function(d) {
                     return d.color;
                 })
                 .attr('fill-opacity', _self.config.valueLabel.fontHighlightOpacity)
-                .attr('font-size', _self.config.valueLabel.fontSize
-                    + _self.config.valueLabel.fontHighlightSizeIncrement)
+                .attr('font-size', _self.config.valueLabel.fontSize +
+                    _self.config.valueLabel.fontHighlightSizeIncrement)
                 .attr('font-weight', 'bold');
 
             if (!keepExisting) {
@@ -269,15 +275,15 @@ _SC.prototype.getHighlighting = function () {
             _self.scLabels
                 .filter(keyFilter)
                 .classed('highlighted', true)
-                .classed('highlight-locked', function () {
+                .classed('highlight-locked', function() {
                     return lock || d3.select(this).classed('highlight-locked');
                 })
-                .attr('fill', function (d) {
+                .attr('fill', function(d) {
                     return d.color;
                 })
                 .attr('fill-opacity', _self.config.valueLabel.fontHighlightOpacity)
-                .attr('font-size', _self.config.valueLabel.fontSize
-                    + _self.config.valueLabel.fontHighlightSizeIncrement)
+                .attr('font-size', _self.config.valueLabel.fontSize +
+                    _self.config.valueLabel.fontHighlightSizeIncrement)
                 .attr('font-weight', 'bold');
 
             if (!keepExisting) {
@@ -312,15 +318,15 @@ _SC.prototype.getHighlighting = function () {
             _self.scLabels
                 .filter(attrFilter)
                 .classed('highlighted', true)
-                .classed('highlight-locked', function () {
+                .classed('highlight-locked', function() {
                     return lock || d3.select(this).classed('highlight-locked');
                 })
-                .attr('fill', function (d) {
+                .attr('fill', function(d) {
                     return d.color;
                 })
                 .attr('fill-opacity', _self.config.valueLabel.fontHighlightOpacity)
-                .attr('font-size', _self.config.valueLabel.fontSize
-                    + _self.config.valueLabel.fontHighlightSizeIncrement)
+                .attr('font-size', _self.config.valueLabel.fontSize +
+                    _self.config.valueLabel.fontHighlightSizeIncrement)
                 .attr('font-weight', 'bold');
 
             if (!keepExisting) {
@@ -345,7 +351,7 @@ _SC.prototype.getHighlighting = function () {
      * Reset all highlighting
      * @param {boolean} includeLocks true to reset highlights for locked elements as well
      */
-    var resetHighlights = function (includeLocks) {
+    var resetHighlights = function(includeLocks) {
         if (_self.clickManager.isClicked())
             return;
 
@@ -358,13 +364,11 @@ _SC.prototype.getHighlighting = function () {
                 r.classed('highlighted', false)
                     .attr("fill-opacity", _self.config.ribbon.hoverInverseOpacity);
                 locked.attr("fill-opacity", _self.config.ribbon.hoverOpacity);
-            }
-            else {
+            } else {
                 r.classed('highlighted', false)
                     .attr("fill-opacity", _self.config.ribbon.opacity);
             }
-        }
-        else {
+        } else {
             r.classed('highlighted', false)
                 .classed('highlight-locked', false)
                 .attr("fill-opacity", _self.config.ribbon.opacity);
@@ -378,14 +382,14 @@ _SC.prototype.getHighlighting = function () {
 
         if (!includeLocks && lLocked.size() > 0) {
             lLocked
-                .attr('font-size', _self.config.valueLabel.fontSize
-                    + _self.config.valueLabel.fontHighlightSizeIncrement)
+                .attr('font-size', _self.config.valueLabel.fontSize +
+                    _self.config.valueLabel.fontHighlightSizeIncrement)
                 .attr('font-weight', 'bold')
                 .attr('font-size', _self.config.valueLabel.fontSize)
-                .attr('fill', function (d) {
+                .attr('fill', function(d) {
                     return d.color;
                 })
-                .attr('fill-opacity', function () {
+                .attr('fill-opacity', function() {
                     return _self.config.valueLabel.autoHide ?
                         0 : _self.config.valueLabel.fontOpacity;
                 });
@@ -395,27 +399,26 @@ _SC.prototype.getHighlighting = function () {
                 .attr('font-size', _self.config.valueLabel.fontSize)
                 .attr('fill', _self.config.valueLabel.fontHighlightInverseColor)
                 .attr('font-weight', 'normal')
-                .attr('fill-opacity', function () {
+                .attr('fill-opacity', function() {
                     return _self.config.valueLabel.autoHide ?
                         0 : _self.config.valueLabel.fontOpacity;
                 });
-                //TODO: highlight-locked for backdrop
-        }
-        else {
+            //TODO: highlight-locked for backdrop
+        } else {
             _self.scLabels
                 .classed('highlighted', false)
-                .attr('fill-opacity', function () {
+                .attr('fill-opacity', function() {
                     return _self.config.valueLabel.autoHide ?
                         0 : _self.config.valueLabel.fontOpacity;
                 })
                 .attr('font-size', _self.config.valueLabel.fontSize)
-                .attr('fill', function (d) {
+                .attr('fill', function(d) {
                     return d.color;
                 })
                 .attr('font-weight', 'normal');
             _self.scBackdrops
                 .classed('highlighted', false)
-                .attr('fill-opacity', function () {
+                .attr('fill-opacity', function() {
                     return _self.config.valueLabel.autoHide ?
                         0 : _self.config.valueLabel.backdropOpacity;
                 });
