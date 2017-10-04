@@ -1,14 +1,14 @@
-_SC.prototype.getExport = function () {
+_SC.prototype.getExport = function() {
     var _self = this;
     return {
         /**
          * Get or set the config object
          * @param {Object} [c] new config object to set
          */
-        config: function (c) {
+        config: function(c) {
             if (c) {
                 _self.config = c;
-				_self.validateConfig();
+                _self.validateConfig();
                 _self.update();
             }
             return _self.config;
@@ -16,33 +16,34 @@ _SC.prototype.getExport = function () {
 
         /**
          * Update semi-cord with new data
-         * @param {[Object]} d JSON data for the chart
-         * @param {[string]} [dA] Data Attributes : array of attribute names corresponding to the
+         * @param {Object} d updated data for the chart
+         * @property {[Object]} d.data JSON data for the chart
+         * @property {[string]} [d.dataAttributes] Data Attributes : array of attribute names corresponding to the
          *                        property names in the given data. By default, all
          *                        properties of the 1st object in the given data array
          *                        are treated as the attributes
-         * @param {string} [dK] Data Key : property to be treated as the key in the given data.
+         * @property {string} [d.dataKey] Data Key : property to be treated as the key in the given data.
          *                                 By default, 1st property of the 1st object in the given
          *                                 data array is treated as key
          */
-        update: function (d, dA, dK) {
-            _self.data = d || _self.data;
-            _self.dataAttributes = dA || _self.dataAttributes;
-            _self.dataKey = dK || _self.dataKey;
+        update: function(d) {
+            _self.data = d.data || _self.data;
+            _self.dataAttributes = d.dataAttributes || _self.dataAttributes;
+            _self.dataKey = d.datakey || _self.dataKey;
             _self.update();
         },
 
         /**
          * Redraw semi-chord
          */
-        redraw: function(){
-			_self.redraw();
-		},
+        redraw: function() {
+            _self.redraw();
+        },
 
         /**
          * Delete the semi-chord
          */
-        delete: function () {
+        delete: function() {
             _self.d3RootNode.remove();
             _self.d3RootNode = d3.select(_self.parentElement);
         },
@@ -53,7 +54,7 @@ _SC.prototype.getExport = function () {
              * Get the semi chord SVG element
              * @returns {SVGGroupElement} semi chord SVG element
              */
-            getSVGElement: function () {
+            getSVGElement: function() {
                 return _self.d3RootNode.node();
             },
 
@@ -62,7 +63,7 @@ _SC.prototype.getExport = function () {
              * @param {string} attribute attribute name
              * @returns {string} color of the specified attribute
              */
-            getAttributeColor: function (attribute) {
+            getAttributeColor: function(attribute) {
                 if (attribute)
                     return _self.cc.colorScale(attribute);
             }
@@ -75,7 +76,7 @@ _SC.prototype.getExport = function () {
              * @param {function} callback callback function
              * @returns {boolean} true, iff event registered successfully
              */
-            registerCallback: function (event, callback) {
+            registerCallback: function(event, callback) {
                 return _self.eventManager.registerCallback(event, callback);
             },
 
@@ -83,7 +84,7 @@ _SC.prototype.getExport = function () {
              * Get all available event names
              * @returns {Object} heirarchical event names
              */
-            getEventNames: function () {
+            getEventNames: function() {
                 return _self.eventManager.getEventNames();
             },
 
@@ -93,7 +94,7 @@ _SC.prototype.getExport = function () {
              * @returns {function} callback function for the specified event.
              *                     undefined if no callback is registered for the specified event
              */
-            getRegisteredCallback: function (event) {
+            getRegisteredCallback: function(event) {
                 if (typeof event === 'string')
                     return _self.eventManager.getRegisteredCallback(event);
                 else
@@ -103,7 +104,7 @@ _SC.prototype.getExport = function () {
             /**
              * Clear all registered callback
              */
-            clearRegisteredCallbacks: function () {
+            clearRegisteredCallbacks: function() {
                 _self.eventManager.clearRegisteredCallbacks();
             }
         },
@@ -113,7 +114,7 @@ _SC.prototype.getExport = function () {
              * Enable or disable interactions
              * @param {boolean} [value = true] true to enable, false to disable
              */
-            enable: function (value) {
+            enable: function(value) {
                 value = (typeof value === 'undefined') ? true : value;
                 _self.config.disableInteractions = !value;
             },
@@ -127,7 +128,7 @@ _SC.prototype.getExport = function () {
              * @param {boolean} [excludeLabel = false] true to prevent highlighting of associated
              *                                         label text
              */
-            highlightRibbonByElement: function (e, keepExisting, lock, excludeLabel) {
+            highlightRibbonByElement: function(e, keepExisting, lock, excludeLabel) {
                 _self.highlighting.highlightRibbon(e, keepExisting, lock);
 
                 if (!excludeLabel) {
@@ -148,13 +149,13 @@ _SC.prototype.getExport = function () {
              * @param {boolean} [excludeLabel = false] true to prevent highlighting of associated
              *                                         label text
              */
-            highlightRibbonByValue: function (value, key, attribute, keepExisting,
-                                              lock, excludeLabel) {
+            highlightRibbonByValue: function(value, key, attribute, keepExisting,
+                lock, excludeLabel) {
                 var r = _self.highlighting.highlightRibbonByValue(value, key, attribute,
                     keepExisting, lock);
 
                 if (!excludeLabel) {
-                    r.each(function (d) {
+                    r.each(function(d) {
                         _self.highlighting.highlightLabel(d.scData.key, d.scData.attribute, lock);
                     });
                 }
@@ -169,7 +170,7 @@ _SC.prototype.getExport = function () {
              * @param {boolean} [excludeLabel = false] true to prevent highlighting of associated
              *                                         label text
              */
-            highlightRibbonByKey: function (key, keepExisting, lock, excludeLabel) {
+            highlightRibbonByKey: function(key, keepExisting, lock, excludeLabel) {
                 var r = _self.highlighting.highlightRibbonByKey(key, keepExisting, lock);
 
                 if (!excludeLabel) {
@@ -187,7 +188,7 @@ _SC.prototype.getExport = function () {
              * @param {boolean} [excludeLabel = false] true to prevent highlighting of associated
              *                                         label text
              */
-            highlightRibbonByAttribute: function (attribute, keepExisting, lock, excludeLabel) {
+            highlightRibbonByAttribute: function(attribute, keepExisting, lock, excludeLabel) {
                 _self.highlighting.highlightRibbonByAttribute(attribute, keepExisting, lock);
 
                 if (!excludeLabel) {
@@ -195,11 +196,11 @@ _SC.prototype.getExport = function () {
                     _self.highlighting.highlightLabelByAttribute(attribute, keepExisting, lock);
                 }
             },
-			
-			resetHighlights: function(){
-				_self.clickManager.reset();
-				_self.highlighting.resetHighlights();
-			}
+
+            resetHighlights: function() {
+                _self.clickManager.reset();
+                _self.highlighting.resetHighlights();
+            }
         }
     };
 };
