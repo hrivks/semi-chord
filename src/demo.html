@@ -1,78 +1,83 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>semi-chord demo</title>
-        <meta name="description" content="demo page for semi-chord">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-		<!--D3-->
-		<script src="../node_modules/d3/build/d3.min.js"></script>
-		<!--semi-chord-->
-		<script src="semi-chord._SC.js"></script>
-		<script src="semi-chord.validation.js"></script>
-        <script src="semi-chord.utils.js"></script>
-		<script src="semi-chord.computation.js"></script>
-		<script src="semi-chord.drawing.js"></script>
-		<script src="semi-chord.interactions.js"></script>
-        <script src="semi-chord.highlighting.js"></script>
-        <script src="semi-chord.export.js"></script>
-        <script src="semi-chord.js"></script>
 
-    </head>
-    <body>
-        <div style="width:80%; margin:0 auto;">
-            <div id="scContainer1" style="width:900px; height: 700px">
-            </div>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>semi-chord demo</title>
+    <meta name="description" content="demo page for semi-chord">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--D3-->
+    <script src="../node_modules/d3/build/d3.min.js"></script>
+    <!--semi-chord-->
+    <script src="semi-chord._SC.js"></script>
+    <script src="semi-chord.validation.js"></script>
+    <script src="semi-chord.utils.js"></script>
+    <script src="semi-chord.computation.js"></script>
+    <script src="semi-chord.drawing.js"></script>
+    <script src="semi-chord.interactions.js"></script>
+    <script src="semi-chord.highlighting.js"></script>
+    <script src="semi-chord.export.js"></script>
+    <script src="semi-chord.js"></script>
+</head>
+
+<body>
+    <div style="width:80%; margin:0 auto;">
+        <div id="scContainer1" style="width:900px; height: 700px">
         </div>
-		
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-            e.src='https://www.google-analytics.com/analytics.js';
-            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','UA-XXXXX-X','auto');ga('send','pageview');
-        </script>
-		
-		<script>
-            var data = [
-                {
-                    'Product': 'Apple',
-                    'Weight Produced': '2 tonnes',
-                    'Cost per unit': '$2.99',
-                    'Weight Juiced': '0.5 tonnes',
-                    'Shipping per unit': '$0.99',
-                    'Total Profit': '$8.3 K'
-                },
-                {
-                    'Product': 'Orange',
-                    'Weight Produced': '4.5 tonnes',
-                    'Cost per unit': '$1.49',
-                    'Weight Juiced': '3.5 tonnes',
-                    'Shipping per unit': '$0.29',
-                    'Total Profit': '$12.5 K'
-                },
-                {
-                    'Product': 'Mango',
-                    'Weight Produced': '1.1 tonnes',
-                    'Cost per unit': '$4.29',
-                    'Weight Juiced': '0.2 tonnes',
-                    'Shipping per unit': '$0.99',
-                    'Total Profit': '$5.3 K'
-                },
-                {
-                    'Product': 'Banana',
-                    'Weight Produced': '0.3 tonnes',
-                    'Cost per unit': '$1.99',
-                    'Weight Juiced': '0.1 tonnes',
-                    'Shipping per unit': '$0.49',
-                    'Total Profit': '$3.7 K'
-                }
-            ];
+    </div>
 
-            var sc1 = semiChord('#scContainer1', data);
-		</script>
-    </body>
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-43791818-2"></script>
+    <script>
+        var data = [{
+            'product': 'A',
+            '2014': '34.5K',
+            '2015': '24.1K',
+            '2016': '12.5K',
+            '2017': '29.9K'
+        }, {
+            'product': 'B',
+            '2014': '54.5K',
+            '2015': '23.1K',
+            '2016': '2.5K',
+            '2017': '10.9K'
+        }, {
+            'product': 'C',
+            '2014': '29.2K',
+            '2015': '13.4K',
+            '2016': '27.8K',
+            '2017': '18.3K'
+        }, {
+            'product': 'D',
+            '2014': '11.5K',
+            '2015': '28.3K',
+            '2016': '18.4K',
+            '2017': '19.9K'
+        }];
+
+        var sc1 = semiChord({
+            selector: '#scContainer1',
+            data: data,
+            dataKey: 'product'
+        });
+    </script>
+
+</body>
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43791818-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments)
+    };
+    gtag('js', new Date());
+
+    gtag('config', 'UA-43791818-2');
+
+    gtag('set', 'dimension2', 'semi-chord');
+</script>
+
 </html>
