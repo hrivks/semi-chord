@@ -64,6 +64,7 @@ _SC.prototype.getHighlighting = function() {
             if (value)
                 r = r.filter(':not(' + valueFilter + ')');
 
+            r = r.filter(':not(.highlight-locked)');
             var hlightRemoved = r.filter('.highlighted');
 
             r.classed('highlighted', false)
@@ -118,6 +119,7 @@ _SC.prototype.getHighlighting = function() {
 
             r = _self.scRibbons
                 .filter(':not(' + keyFilter + ')');
+            r = r.filter(':not(.highlight-locked)');
             if (keepExisting) {
                 r = r.filter(':not(.highlighted)');
             }
@@ -159,6 +161,7 @@ _SC.prototype.getHighlighting = function() {
 
             r = _self.scRibbons
                 .filter(':not(' + attrFilter + ')');
+            r = r.filter(':not(.highlight-locked)');
             if (keepExisting) {
                 r = r.filter(':not(.highlighted)');
             }
@@ -352,7 +355,7 @@ _SC.prototype.getHighlighting = function() {
      * @param {boolean} includeLocks true to reset highlights for locked elements as well
      */
     var resetHighlights = function(includeLocks) {
-        if (_self.clickManager.isClicked())
+        if (!includeLocks && _self.clickManager.isClicked())
             return;
 
         var r = _self.scRibbons;
@@ -423,8 +426,16 @@ _SC.prototype.getHighlighting = function() {
                         0 : _self.config.valueLabel.backdropOpacity;
                 });
         }
-
     };
+
+    /**
+     * Clear all locks
+     */
+    var clearLocks = function() {
+        _self.scRibbons.classed('highlight-locked', false);
+        _self.scBackdrops.classed('highlight-locked', false);
+        _self.scLabels.classed('highlight-locked', false);
+    }
 
     return {
         highlightRibbon: highlightRibbon,
@@ -434,6 +445,7 @@ _SC.prototype.getHighlighting = function() {
         highlightLabel: highlightLabel,
         highlightLabelByKey: highlightLabelByKey,
         highlightLabelByAttribute: highlightLabelByAttribute,
-        resetHighlights: resetHighlights
+        resetHighlights: resetHighlights,
+        clearLocks: clearLocks
     }
 };

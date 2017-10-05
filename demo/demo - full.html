@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>semi-chord demo</title>
+    <meta name="description" content="demo page for semi-chord">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- jquery -->
+    <script src="http://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+    <!-- Bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <!--D3-->
+    <script src="../node_modules/d3/build/d3.min.js"></script>
+    <!--semi-chord-->
+    <script src="../semi-chord.min.js"></script>
+    <script src="demo.js"></script>
+    <style>
+        .d-visible-portrait {
+            display: none;
+        }
+        
+        @media screen and (orientation: portrait) {
+            .d-visible-portrait {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row mt-3">
+            <div class="col-xs-12 col-sm-8">
+                <p class="d-visible-portrait text-muted text-center">
+                    <em>This site is best viewed in landscape mode. Tilt your device for a better experience</em>
+                </p>
+
+                <h3 class="text-center text-muted">Sales by year</h3>
+                <div id="scContainer1" class="w-100" style="height: 90vmin">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4" id="side-bar" style="height:96vh; overflow-y:scroll">
+                <!-- Data -->
+                <div class="card">
+                    <div class="card-header" data-toggle="collapse" data-target="#data-card" data-parent="#side-bar" onclick="toggleAccordianChevron(this)">
+                        Data <i class="fa fa-chevron-up fa-chevron-down text-secondary pull-right"></i>
+                    </div>
+                    <div class="card-body collapse" id="data-card">
+                        <div class="form-group">
+                            <label class="font-weight-bold">JSON</label>
+                            <textarea class="form-control" style="height:350px">
+[{
+    "product":"Foo",
+    "2014":"34.5K",
+    "2015":"24.1K",
+    "2016":"12.5K",
+    "2017":"29.9K"
+},
+{
+    "product":"Bar",
+    "2014":"54.5K",
+    "2015":"23.1K",
+    "2016":"2.5K",
+    "2017":"10.9K"
+},
+{
+    "product":"Qux",
+    "2014":"29.2K",
+    "2015":"13.4K",
+    "2016":"27.8K",
+    "2017":"18.3K"
+},
+{
+    "product":"Baz",
+    "2014":"11.5K",
+    "2015":"28.3K",
+    "2016":"18.4K",
+    "2017":"19.9K"
+}]
+</textarea>
+
+                            <label for="dataKey" class="font-weight-bold mt-3">Data Key</label>
+                            <div class="form-group form-inline">
+                                <input class="form-control form-control-sm mr-1" type="text" id="dataKey" value="product" />
+                                <div class="btn btn-sm btn-primary" onclick="onDataUpdate()">Update</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- /Data -->
+                <!-- Interactions -->
+                <div class="card mt-3">
+                    <div class="card-header" data-toggle="collapse" data-parent="#side-bar" data-target="#interactions-card" onclick="toggleAccordianChevron(this)">
+                        Interactions <i class="fa fa-chevron-up fa-chevron-down text-secondary pull-right"></i>
+                    </div>
+                    <div class="card-body collapse" id="interactions-card">
+                        <div class="form-group">
+                            <input type="checkbox" id="enableInteractions" value="Enable Interactions" checked onclick="toggleInteractions()"> Interactions Enabled
+                            <br>
+                            <small class="text-secondary">Enable / Disable hover and click interactions</small>
+                        </div>
+
+                        <!-- Highlight options -->
+                        <label class="font-weight-bold">
+                                <i class="fa fa-gear" aria-hidden="true"></i> Highlight Options </label>
+                        <div id="highlight-options-wrap">
+                            <div>
+                                <input type="checkbox" id="preserve-previous-highlights" name="Preserve previous Highilights" /> <label class="mb-0" for="preserve-previous-highlights">Preserve prevous highlights</label>
+                            </div>
+                            <small class="text-secondary"><em>allows highlighting multiple, one after the other</em></small>
+                            <br>
+                            <div class="pt-3">
+                                <input type="checkbox" id="lock-highlights" name="Lock Highilights" /> <label class="mb-0" for="lock-highlights">Lock highlights</label>
+                            </div>
+                            <small class="text-secondary"><em>allows locking highlights. does not clear on mouse hover</em></small>
+                        </div>
+                        <br>
+                        <!-- /Highlight options -->
+
+                        <!-- Highlight by key -->
+                        <label class=font-weight-bold>Highlight by Key</label>
+                        <div id="highlight-by-key-wrap"></div>
+                        <!-- /Highlight by key -->
+                        <br>
+
+                        <!-- Highlight by Attribute -->
+                        <label class=font-weight-bold>Highlight by Attribute</label>
+                        <div id="highlight-by-attr-wrap"></div>
+                        <!-- /Highlight by Attribute -->
+                        <br>
+
+                        <!-- Highlight by Value -->
+                        <label class=font-weight-bold>Highlight by Value</label>
+                        <div id="highlight-by-value-wrap" class="form-group form-group-sm">
+                            <div class="form-inline">
+                                <input class="form-control form-control-sm mr-1" type="text" id="highlight-by-value" placeholder="by value">
+                                <div class="btn btn-sm btn-secondary" onclick="highlightByValue()"><i class="fa fa-check" aria-hidden="true"></i></div>
+                            </div>
+                        </div>
+                        <!-- /Highlight by Value -->
+                        <div class="form-control btn btn-sm btn-danger" onclick="resetHighlights()">Reset Highlights</div>
+                    </div>
+                </div>
+                <!-- /Interactions -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Analytics -->
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-43791818-2"></script>
+</body>
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43791818-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments)
+    };
+    gtag('js', new Date());
+
+    gtag('config', 'UA-43791818-2');
+
+    gtag('set', 'dimension2', 'semi-chord');
+</script>
+
+</html>

@@ -197,9 +197,20 @@ _SC.prototype.getExport = function() {
                 }
             },
 
-            resetHighlights: function() {
+            /**
+             * reset highlighted ribbons
+             * @param {Boolean} includeLocks  true, to reset highlight locked elements
+             */
+            resetHighlights: function(includeLocks) {
                 _self.clickManager.reset();
-                _self.highlighting.resetHighlights();
+                _self.highlighting.resetHighlights(includeLocks);
+            },
+
+            /**
+             * clear highlight-lock 
+             */
+            clearLocks: function() {
+                _self.highlighting.clearLocks();
             }
         }
     };

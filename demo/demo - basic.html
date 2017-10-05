@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>semi-chord demo</title>
+    <meta name="description" content="demo page for semi-chord">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--D3-->
+    <script src="../node_modules/d3/build/d3.min.js"></script>
+    <!--semi-chord-->
+    <script src="../semi-chord.min.js"></script>
+</head>
+
+<body>
+    <div style="width:80%; margin:0 auto;">
+        <div id="scContainer1" style="width:100%; height: 95vmin">
+        </div>
+    </div>
+
+    <script>
+        var data = [{
+            "product": "Foo",
+            "2014": "34.5K",
+            "2015": "24.1K",
+            "2016": "12.5K",
+            "2017": "29.9K"
+        }, {
+            "product": "Bar",
+            "2014": "54.5K",
+            "2015": "23.1K",
+            "2016": "2.5K",
+            "2017": "10.9K"
+        }, {
+            "product": "Qux",
+            "2014": "29.2K",
+            "2015": "13.4K",
+            "2016": "27.8K",
+            "2017": "18.3K"
+        }, {
+            "product": "Baz",
+            "2014": "11.5K",
+            "2015": "28.3K",
+            "2016": "18.4K",
+            "2017": "19.9K"
+        }];
+
+        var sc1 = semiChord({
+            selector: '#scContainer1',
+            data: data,
+            dataKey: 'product'
+        });
+    </script>
+
+</body>
+
+</html>
