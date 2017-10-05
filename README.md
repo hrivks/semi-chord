@@ -2,7 +2,7 @@
 
 A D3.js based chart similar to a chord diagram with all the bells and whisles
 
-### :zap: [live demo](http://meetvikas.net/projects/semi-chord/demo/index.html) :zap:
+### :zap: [live demo](http://meetvikas.net/projects/semi-chord/demo) :zap:
 
 *preview image:*
 ![semi-chord sample image](https://github.com/hrivks/blob/raw/master/semi-chord-sample.png)
