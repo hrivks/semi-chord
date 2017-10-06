@@ -128,6 +128,28 @@ function toggleAccordianChevron(e) {
     });
 }
 
+
+var registerEvent = (function() {
+    var registeredEvents = [];
+
+    function onEventCallback(obj) {
+        console.log('event fired', obj);
+        $('#eventLog').append('<p class="border p-1">' + obj.event + ' fired. ' + (obj.data ? JSON.stringify(obj.data) : "") + '</p>');
+    }
+
+    function _registerEvent() {
+        var selectedEvent = document.getElementById('eventsDropdown').value;
+        if (selectedEvent && registeredEvents.indexOf(selectedEvent) == -1) {
+            registeredEvents.push(selectedEvent);
+            scObj.events.registerCallback(selectedEvent, onEventCallback);
+            $('#eventLog').append('<p class="border p-1"> Registerd for ' + selectedEvent + '</p>');
+        }
+    }
+
+    return _registerEvent;
+
+})();
+
 // on page load
 $(function() {
     onLoad();

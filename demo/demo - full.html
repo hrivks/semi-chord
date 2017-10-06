@@ -46,8 +46,8 @@
             <div class="col-xs-12 col-sm-4" id="side-bar" style="height:96vh; overflow-y:scroll">
                 <!-- Data -->
                 <div class="card">
-                    <div class="card-header" data-toggle="collapse" data-target="#data-card" data-parent="#side-bar" onclick="toggleAccordianChevron(this)">
-                        Data <i class="fa fa-chevron-up fa-chevron-down text-secondary pull-right"></i>
+                    <div class="card-header text-light bg-info" data-toggle="collapse" data-target="#data-card" data-parent="#side-bar" onclick="toggleAccordianChevron(this)">
+                        Data <i class="fa fa-chevron-up fa-chevron-down pull-right"></i>
                     </div>
                     <div class="card-body collapse" id="data-card">
                         <div class="form-group">
@@ -95,32 +95,15 @@
                 <!-- /Data -->
                 <!-- Interactions -->
                 <div class="card mt-3">
-                    <div class="card-header" data-toggle="collapse" data-parent="#side-bar" data-target="#interactions-card" onclick="toggleAccordianChevron(this)">
-                        Interactions <i class="fa fa-chevron-up fa-chevron-down text-secondary pull-right"></i>
+                    <div class="card-header text-light bg-success" data-toggle="collapse" data-parent="#side-bar" data-target="#interactions-card" onclick="toggleAccordianChevron(this)">
+                        Interactions <i class="fa fa-chevron-up fa-chevron-down pull-right"></i>
                     </div>
-                    <div class="card-body collapse" id="interactions-card">
+                    <div class="card-body collapse show" id="interactions-card">
                         <div class="form-group">
                             <input type="checkbox" id="enableInteractions" value="Enable Interactions" checked onclick="toggleInteractions()"> Interactions Enabled
                             <br>
                             <small class="text-secondary">Enable / Disable hover and click interactions</small>
                         </div>
-
-                        <!-- Highlight options -->
-                        <label class="font-weight-bold">
-                                <i class="fa fa-gear" aria-hidden="true"></i> Highlight Options </label>
-                        <div id="highlight-options-wrap">
-                            <div>
-                                <input type="checkbox" id="preserve-previous-highlights" name="Preserve previous Highilights" /> <label class="mb-0" for="preserve-previous-highlights">Preserve prevous highlights</label>
-                            </div>
-                            <small class="text-secondary"><em>allows highlighting multiple, one after the other</em></small>
-                            <br>
-                            <div class="pt-3">
-                                <input type="checkbox" id="lock-highlights" name="Lock Highilights" /> <label class="mb-0" for="lock-highlights">Lock highlights</label>
-                            </div>
-                            <small class="text-secondary"><em>allows locking highlights. does not clear on mouse hover</em></small>
-                        </div>
-                        <br>
-                        <!-- /Highlight options -->
 
                         <!-- Highlight by key -->
                         <label class=font-weight-bold>Highlight by Key</label>
@@ -143,7 +126,66 @@
                             </div>
                         </div>
                         <!-- /Highlight by Value -->
+
+                        <!-- Highlight options -->
+                        <label class="font-weight-bold">
+                                <i class="fa fa-gear" aria-hidden="true"></i> Highlight Options </label>
+                        <div id="highlight-options-wrap">
+                            <div>
+                                <input type="checkbox" id="preserve-previous-highlights" name="Preserve previous Highilights" /> <label class="mb-0" for="preserve-previous-highlights">Preserve prevous highlights</label>
+                            </div>
+                            <small class="text-secondary"><em>allows highlighting multiple, one after the other</em></small>
+                            <br>
+                            <div class="pt-3">
+                                <input type="checkbox" id="lock-highlights" name="Lock Highilights" /> <label class="mb-0" for="lock-highlights">Lock highlights</label>
+                            </div>
+                            <small class="text-secondary"><em>allows locking highlights. does not clear on mouse hover</em></small>
+                        </div>
+                        <!-- /Highlight options -->
+                        <br>
                         <div class="form-control btn btn-sm btn-danger" onclick="resetHighlights()">Reset Highlights</div>
+                    </div>
+                </div>
+                <!-- /Interactions -->
+                <!-- Events -->
+                <div class="card mt-3">
+                    <div class="card-header text-light bg-danger" data-toggle="collapse" data-parent="#side-bar" data-target="#events-card" onclick="toggleAccordianChevron(this)">
+                        Events <i class="fa fa-chevron-up fa-chevron-down pull-right"></i>
+                    </div>
+                    <div class="card-body collapse" id="events-card">
+                        <div class="form-group form-inline">
+                            <select id="eventsDropdown" class="form-control form-control-sm mr-1">
+                                <option value="onRibbonClick">Ribbon - Click</option>
+                                <option value="onRibbonMouseEnter">Ribbon - Mouse Enter</option>
+                                <option value="onRibbonMouseLeave">Ribbon - Mouse Leave</option>
+                                <option value="onRibbonHighlight">Ribbon - Highlight</option>
+                                <option value="onRibbonHighlightRemoved">Ribbon - HighlightRemoved</option>
+                                
+                                <option value="onKeyClick">Key - Click</option>
+                                <option value="onKeyMouseEnter">Key - Mouse Enter</option>
+                                <option value="onKeyMouseLeave">Key - Mouse Leave</option>
+                                <option value="onKeyHighlight">Key - Highlight</option>
+                                <option value="onKeyHighlightRemoved">Key - HighlightRemoved</option>
+                                
+                                <option value="onAttributeClick">Attribute - Click</option>
+                                <option value="onAttributeMouseEnter">Attribute - Mouse Enter</option>
+                                <option value="onAttributeMouseLeave">Attribute - Mouse Leave</option>
+                                <option value="onAttributeHighlight">Attribute - Highlight</option>
+                                <option value="onAttributeHighlightRemoved">Attribute - HighlightRemoved</option>
+                                
+                                <option value="onBaseClick">Base - Click</option>
+
+                                <option value="onClick">Global - Click</option>
+                                <option value="onMouseEnter">Global - Mouse Enter</option>
+                                <option value="onMouseLeave">Global - Mouse Leave</option>
+                            </select>
+                            <div class="btn btn-sm btn-primary" onclick="registerEvent()">
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div id="eventLog">
+
+                        </div>
                     </div>
                 </div>
                 <!-- /Interactions -->
