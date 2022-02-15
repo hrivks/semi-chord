@@ -117,8 +117,9 @@ _SC.prototype.Utils = function Utils(radius, centerX, centerY) {
      * @returns {number}
      */
     this.getNumericValue = function (s) {
-        if (isFinite(s))
-            return s;
+        if (isFinite(s)) {
+            return parseFloat(s);
+        }
         var num = s.replace(/[^0-9.]/g, "");
         return num ? parseFloat(num) : 0;
     };
